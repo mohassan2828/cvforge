@@ -4,191 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV Flow Pro | SaaS Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Plus+Jakarta+Sans:wght@500;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root {
-            --brand: #4f46e5;
-            --sidebar-dark: #1e293b;
-            --gold: #d4af37;
-            --bg-page: #f1f5f9;
-        }
+        :root { --brand: #4f46e5; --dark: #1e293b; --gold: #d4af37; --bg: #f1f5f9; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #334155; }
 
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-page); margin: 0; color: #334155; }
-
-        /* --- واجهة الموقع SaaS UI --- */
-        .dashboard-nav {
-            background: #ffffff; padding: 15px 5%; display: flex;
-            justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .logo-text { font-weight: 900; font-size: 22px; color: var(--brand); letter-spacing: -1px; }
-
-        .app-grid {
-            display: grid; grid-template-columns: 450px 1fr; 
-            gap: 30px; max-width: 1400px; margin: 30px auto; padding: 0 20px;
-        }
-
-        .editor-card {
-            background: #ffffff; padding: 25px; border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05); height: fit-content;
-        }
-
-        .form-h3 { font-size: 18px; margin-bottom: 20px; color: var(--sidebar-dark); border-right: 4px solid var(--brand); padding-right: 10px; }
+        /* واجهة الموقع SaaS */
+        .navbar { background: #fff; padding: 15px 5%; display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; }
+        .logo { font-weight: 900; font-size: 22px; color: var(--brand); }
         
-        .input-box { margin-bottom: 15px; }
-        .input-box label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
-        input, textarea {
-            width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px;
-            font-family: inherit; transition: 0.2s; box-sizing: border-box;
-        }
-        input:focus { border-color: var(--brand); outline: none; background: #f8fafc; }
+        .app-grid { display: grid; grid-template-columns: 400px 1fr; gap: 20px; max-width: 1300px; margin: 20px auto; padding: 0 15px; }
+        .editor { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
+        
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: var(--brand); color: #fff; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #4338ca; transform: translateY(-2px); }
 
-        .action-btn {
-            width: 100%; padding: 16px; background: var(--brand); color: white;
-            border: none; border-radius: 12px; font-weight: 800; font-size: 16px;
-            cursor: pointer; margin-top: 10px; transition: 0.3s;
-        }
-        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); }
+        /* قسم المعاينة */
+        .preview-area { background: #94a3b8; border-radius: 15px; padding: 20px; display: flex; justify-content: center; overflow: auto; }
 
-        /* --- قسم المعاينة المباشرة --- */
-        .preview-pane { 
-            background: #cbd5e1; border-radius: 20px; padding: 40px;
-            display: flex; justify-content: center; overflow: hidden;
+        /* تصميم الـ PDF (Canva Style) - قياسات دقيقة جداً */
+        #cv-template {
+            width: 210mm; height: 297mm;
+            background: #fff; display: flex !important;
+            position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            flex-shrink: 0;
         }
 
-        /* --- تصميم الـ PDF الـ Canva Style (A4) --- */
-        #pdf-render {
-            width: 210mm; height: 296.8mm; /* قياس A4 بالظبط */
-            background: white; display: flex !important;
-            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
+        .sidebar { width: 32%; background: var(--dark) !important; color: #fff !important; padding: 40px 20px; box-sizing: border-box; }
+        .photo-box { width: 150px; height: 150px; border: 4px solid var(--gold); border-radius: 10px; margin: 0 auto 30px; overflow: hidden; background: #334155; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .side-h3 { color: var(--gold) !important; font-size: 18px; border-bottom: 1px solid #475569; padding-bottom: 5px; margin-top: 25px; }
+        .contact-item { font-size: 13px; margin: 10px 0; color: #cbd5e1 !important; }
+        
+        .skill-tag { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid var(--gold); padding: 4px 8px; border-radius: 4px; font-size: 11px; margin: 2px; }
 
-        .canva-sidebar {
-            width: 32%; background: var(--sidebar-dark) !important;
-            color: white !important; padding: 50px 25px; -webkit-print-color-adjust: exact;
-        }
+        .main-content { width: 68%; padding: 60px 35px; box-sizing: border-box; }
+        .name-h1 { font-size: 45px; font-weight: 900; color: var(--dark) !important; margin: 0; }
+        .job-h2 { font-size: 22px; color: var(--gold) !important; margin: 5px 0 35px; }
+        
+        .section { margin-bottom: 30px; }
+        .section-h4 { background: #f8fafc !important; padding: 10px; border-right: 5px solid var(--gold); font-size: 18px; color: var(--dark) !important; margin-bottom: 12px; }
+        .text-p { font-size: 15px; line-height: 1.7; color: #334155 !important; white-space: pre-line; }
 
-        .canva-photo-box {
-            width: 160px; height: 160px; border: 5px solid var(--gold);
-            border-radius: 15px; margin: 0 auto 40px; overflow: hidden;
-            background: #334155;
-        }
-        #resPhoto { width: 100%; height: 100%; object-fit: cover; }
-
-        .side-section-title { color: var(--gold) !important; font-size: 20px; font-weight: 800; border-bottom: 1px solid #475569; padding-bottom: 10px; margin: 30px 0 15px; }
-        .contact-row { font-size: 14px; margin-bottom: 12px; color: #cbd5e1 !important; display: flex; gap: 10px; }
-
-        .skill-list { display: flex; flex-wrap: wrap; gap: 8px; }
-        .skill-tag { 
-            background: rgba(255,255,255,0.1) !important; padding: 5px 12px; 
-            border: 1px solid var(--gold); border-radius: 6px; font-size: 12px; color: white !important;
-            -webkit-print-color-adjust: exact;
-        }
-
-        .canva-main { width: 68%; padding: 70px 45px; box-sizing: border-box; }
-        .canva-name { font-size: 55px; font-weight: 900; color: var(--sidebar-dark) !important; margin: 0; line-height: 1; }
-        .canva-title { font-size: 24px; color: var(--gold) !important; margin: 10px 0 45px; font-weight: 400; }
-
-        .content-block { margin-bottom: 40px; }
-        .content-block h4 { 
-            background: #f8fafc !important; color: var(--sidebar-dark) !important;
-            padding: 12px 20px; border-right: 6px solid var(--gold);
-            font-size: 20px; margin-bottom: 15px; -webkit-print-color-adjust: exact;
-        }
-        .text-p { font-size: 16px; line-height: 1.8; color: #334155 !important; white-space: pre-line; }
-
-        @media (max-width: 1024px) {
-            .app-grid { grid-template-columns: 1fr; }
-            .preview-pane { display: none; } /* يختفي المعاينة في الموبايل لسهولة الإدخال */
+        /* تصغير المعاينة لتناسب الشاشة */
+        @media screen and (min-width: 900px) {
+            #cv-template { transform: scale(0.5); transform-origin: top center; margin-bottom: -50%; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="dashboard-nav">
-        <div class="logo-text">CVFLOW<span style="color:#94a3b8">.AI</span></div>
-        <div style="color: #64748b; font-size: 13px; font-weight: bold;">Canva Engine v3.0</div>
+    <nav class="navbar">
+        <div class="logo">CVFLOW PRO</div>
+        <div style="font-size: 12px; color: #64748b;">SAAS BUILDER v4.0</div>
     </nav>
 
     <div class="app-grid">
-        <div class="editor-card">
-            <h3 class="form-h3">المعلومات الشخصية</h3>
-            <div class="input-box">
-                <label>الصورة الشخصية</label>
-                <input type="file" id="inPhoto" accept="image/*" onchange="previewImg(event)">
-            </div>
-            <div class="input-box">
-                <label>الاسم الكامل</label>
-                <input type="text" id="inName" placeholder="أدخل اسمك..." oninput="sync()">
-            </div>
-            <div class="input-box">
-                <label>المسمى الوظيفي</label>
-                <input type="text" id="inJob" placeholder="مثلاً: مدير تسويق" oninput="sync()">
-            </div>
-            <div class="input-box">
-                <label>رقم الموبايل</label>
-                <input type="tel" id="inPhone" placeholder="0123456789" oninput="sync()">
-            </div>
-            <div class="input-box">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="inEmail" placeholder="name@company.com" oninput="sync()">
-            </div>
-
-            <h3 class="form-h3">المحتوى المهني</h3>
-            <div class="input-box">
-                <label>نبذة عنك</label>
-                <textarea id="inAbout" rows="3" oninput="sync()"></textarea>
-            </div>
-            <div class="input-box">
-                <label>الخبرة العملية</label>
-                <textarea id="inExp" rows="4" oninput="sync()"></textarea>
-            </div>
-            <div class="input-box">
-                <label>التعليم</label>
-                <textarea id="inEdu" rows="2" oninput="sync()"></textarea>
-            </div>
-            <div class="input-box">
-                <label>المهارات (افصل بينها بفاصلة ,)</label>
-                <input type="text" id="inSkills" placeholder="برمجة, قيادة, تصميم" oninput="sync()">
-            </div>
-
-            <button class="action-btn" onclick="download()">تحميل ملف الـ PDF الفخم 📥</button>
+        <div class="editor">
+            <input type="file" id="inPhoto" accept="image/*" onchange="loadImg(event)">
+            <input type="text" id="inName" placeholder="الاسم الكامل" oninput="sync()">
+            <input type="text" id="inJob" placeholder="المسمى الوظيفي" oninput="sync()">
+            <input type="tel" id="inPhone" placeholder="رقم الهاتف" oninput="sync()">
+            <input type="email" id="inEmail" placeholder="البريد الإلكتروني" oninput="sync()">
+            <textarea id="inAbout" placeholder="نبذة شخصية..." oninput="sync()"></textarea>
+            <textarea id="inExp" placeholder="الخبرة المهنية (كل خبرة في سطر)" rows="5" oninput="sync()"></textarea>
+            <textarea id="inEdu" placeholder="التعليم" oninput="sync()"></textarea>
+            <input type="text" id="inSkills" placeholder="المهارات (افصل بفاصلة ,)" oninput="sync()">
+            
+            <button class="btn" onclick="exportPDF()">تحميل PDF عالي الجودة 🚀</button>
         </div>
 
-        <div class="preview-pane">
-            <div id="pdf-render">
-                <aside class="canva-sidebar">
-                    <div class="canva-photo-box">
-                        <img id="resPhoto" src="https://via.placeholder.com/150">
-                    </div>
-                    <div class="side-section-title">بيانات التواصل</div>
-                    <div class="contact-row"><span>📞</span> <span id="resPhone">010xxxxxxxx</span></div>
-                    <div class="contact-row"><span>✉️</span> <span id="resEmail">User@mail.com</span></div>
-                    
-                    <div class="side-section-title">المهارات</div>
-                    <div id="resSkills" class="skill-list">
-                        </div>
+        <div class="preview-area">
+            <div id="cv-template">
+                <aside class="sidebar">
+                    <div class="photo-box"><img id="resPhoto" src=""></div>
+                    <div class="side-h3">اتصال</div>
+                    <div id="resPhone" class="contact-item"></div>
+                    <div id="resEmail" class="contact-item"></div>
+                    <div class="side-h3">المهارات</div>
+                    <div id="resSkills"></div>
                 </aside>
-
-                <main class="canva-main">
-                    <h1 id="resName" class="canva-name">اسمك الكامل</h1>
-                    <h2 id="resJob" class="canva-title">المسمى الوظيفي الخاص بك</h2>
-                    
-                    <div class="content-block">
-                        <h4>الملف الشخصي</h4>
-                        <div id="resAbout" class="text-p">اكتب نبذة عنك لتظهر هنا...</div>
+                <main class="main-content">
+                    <h1 id="resName" class="name-h1">الاسم الكامل</h1>
+                    <h2 id="resJob" class="job-h2">المسمى الوظيفي</h2>
+                    <div class="section">
+                        <div class="section-h4">الملف الشخصي</div>
+                        <div id="resAbout" class="text-p"></div>
                     </div>
-
-                    <div class="content-block">
-                        <h4>الخبرة المهنية</h4>
-                        <div id="resExp" class="text-p">تفاصيل خبراتك تظهر هنا...</div>
+                    <div class="section">
+                        <div class="section-h4">الخبرة المهنية</div>
+                        <div id="resExp" class="text-p"></div>
                     </div>
-
-                    <div class="content-block">
-                        <h4>التعليم والمؤهلات</h4>
-                        <div id="resEdu" class="text-p">مؤهلاتك الدراسية...</div>
+                    <div class="section">
+                        <div class="section-h4">التعليم</div>
+                        <div id="resEdu" class="text-p"></div>
                     </div>
                 </main>
             </div>
@@ -196,22 +111,21 @@
     </div>
 
     <script>
-        function previewImg(e) {
+        function loadImg(e) {
             const r = new FileReader();
             r.onload = () => { document.getElementById('resPhoto').src = r.result; };
             r.readAsDataURL(e.target.files[0]);
         }
 
         function sync() {
-            document.getElementById('resName').innerText = document.getElementById('inName').value || "اسمك الكامل";
+            document.getElementById('resName').innerText = document.getElementById('inName').value || "الاسم الكامل";
             document.getElementById('resJob').innerText = document.getElementById('inJob').value || "المسمى الوظيفي";
-            document.getElementById('resPhone').innerText = document.getElementById('inPhone').value || "رقم الموبايل";
-            document.getElementById('resEmail').innerText = document.getElementById('inEmail').value || "User@mail.com";
+            document.getElementById('resPhone').innerText = "📞 " + document.getElementById('inPhone').value;
+            document.getElementById('resEmail').innerText = "✉️ " + document.getElementById('inEmail').value;
             document.getElementById('resAbout').innerText = document.getElementById('inAbout').value;
             document.getElementById('resExp').innerText = document.getElementById('inExp').value;
             document.getElementById('resEdu').innerText = document.getElementById('inEdu').value;
 
-            // تحديث المهارات
             const sBox = document.getElementById('resSkills');
             sBox.innerHTML = "";
             document.getElementById('inSkills').value.split(',').forEach(s => {
@@ -219,16 +133,31 @@
             });
         }
 
-        function download() {
-            const element = document.getElementById('pdf-render');
-            const opt = {
-                margin: 0,
-                filename: 'Professional_CV_Canva.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+        async function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('cv-template');
+            
+            // إلغاء الـ scale مؤقتاً لالتقاط الصورة بجودتها الأصلية
+            const originalTransform = element.style.transform;
+            element.style.transform = "none";
+
+            const canvas = await html2canvas(element, {
+                scale: 3, // دقة عالية جداً
+                useCORS: true,
+                logging: false,
+                allowTaint: true
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('Professional_CV.pdf');
+
+            // إعادة الـ scale للمعاينة
+            element.style.transform = originalTransform;
         }
     </script>
 </body>
