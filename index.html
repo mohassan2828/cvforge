@@ -3,83 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional CV Generator</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>Canva Style Pro CV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* --- تنسيقات الواجهة الخارجية (ما تظهر في الموبايل) --- */
+        body { font-family: 'Cairo', sans-serif; background: #eceff1; margin: 0; direction: rtl; }
+        .editor-container { padding: 20px; max-width: 500px; margin: auto; }
+        .input-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        .btn-generate { width: 100%; padding: 15px; background: #2c3e50; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
+
+        /* --- تصميم الـ PDF (السر هنا) --- */
+        #pdf-content { position: absolute; left: -10000px; top: 0; } /* مخفي عن العين لكن موجود للمكتبة */
+        
+        .cv-page {
+            width: 210mm; height: 296mm;
+            background: #ffffff; display: flex !important;
+            position: relative; overflow: hidden;
+        }
+
+        /* الزخرفة العلوية المائلة */
+        .top-banner {
+            position: absolute; top: 0; left: 0; width: 400px; height: 80px;
+            background: linear-gradient(135deg, #2c3e50, #d4af37) !important;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+            -webkit-print-color-adjust: exact; z-index: 2;
+        }
+
+        /* العمود الجانبي الرمادي الفحمي */
+        .side-bar {
+            width: 35%; background: #2c3e50 !important;
+            color: white !important; padding: 60px 30px;
+            box-sizing: border-box; -webkit-print-color-adjust: exact;
+        }
+
+        .img-frame {
+            width: 180px; height: 180px; border: 5px solid #d4af37;
+            margin: 0 auto 40px; border-radius: 10px; overflow: hidden;
+            background: #34495e;
+        }
+        #resPhoto { width: 100%; height: 100%; object-fit: cover; }
+
+        .side-bar h3 { color: #d4af37 !important; border-bottom: 1px solid #4a6278; padding-bottom: 8px; font-size: 22px; }
+        .contact-info { font-size: 14px; margin-bottom: 15px; color: #cfd8dc !important; }
+
+        /* الجزء الرئيسي الأبيض */
+        .main-bar { width: 65%; padding: 80px 40px; box-sizing: border-box; }
+        .cv-name { font-size: 50px; color: #2c3e50 !important; margin: 0; font-weight: 900; line-height: 1.1; }
+        .cv-title { font-size: 24px; color: #d4af37 !important; margin: 10px 0 40px; font-weight: 400; }
+
+        .section-box { margin-bottom: 35px; }
+        .section-box h4 { 
+            font-size: 20px; color: #2c3e50 !important; border-right: 6px solid #d4af37; 
+            padding: 10px 15px; background: #f5f7f9 !important; margin-bottom: 15px;
+            -webkit-print-color-adjust: exact;
+        }
+        .section-text { font-size: 16px; line-height: 1.8; color: #37474f !important; white-space: pre-line; padding-right: 15px; }
+
+        .skill-pill { 
+            display: inline-block; background: rgba(255,255,255,0.1) !important; 
+            padding: 5px 12px; border-radius: 4px; font-size: 12px; 
+            border: 1px solid #d4af37; margin: 4px; color: white !important;
+            -webkit-print-color-adjust: exact;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <header class="app-header">
-            <h1>مُصمم السيرة الذاتية</h1>
-            <p>أدخل بياناتك لتحصل على تصميم Canva احترافي</p>
+    <div class="editor-container">
+        <header style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #2c3e50;">مُصمم الـ CV الاحترافي ✨</h2>
         </header>
 
-        <div class="form-card">
-            <label>📸 الصورة الشخصية</label>
-            <input type="file" id="imageInput" accept="image/*" onchange="processImage(event)">
+        <div class="input-card">
+            <input type="file" id="fPhoto" accept="image/*" onchange="loadImg(event)">
+            <input type="text" id="iName" placeholder="الاسم الكامل">
+            <input type="text" id="iJob" placeholder="المسمى الوظيفي">
+            <input type="email" id="iEmail" placeholder="البريد الإلكتروني">
+            <input type="tel" id="iPhone" placeholder="رقم الهاتف">
+            <input type="text" id="iLoc" placeholder="الموقع (المدينة، الدولة)">
+            <textarea id="iAbout" rows="3" placeholder="نبذة تعريفية..."></textarea>
+            <textarea id="iExp" rows="4" placeholder="الخبرات المهنية"></textarea>
+            <textarea id="iEdu" rows="3" placeholder="المؤهلات التعليمية"></textarea>
+            <input type="text" id="iSkills" placeholder="المهارات (افصل بفاصلة ,)">
             
-            <input type="text" id="nameInput" placeholder="الاسم الكامل">
-            <input type="text" id="jobInput" placeholder="المسمى الوظيفي">
-            <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
-            <input type="tel" id="phoneInput" placeholder="رقم الهاتف">
-            <input type="text" id="addressInput" placeholder="العنوان">
-            
-            <textarea id="aboutInput" rows="3" placeholder="نبذة شخصية..."></textarea>
-            <textarea id="expInput" rows="4" placeholder="الخبرة المهنية"></textarea>
-            <textarea id="eduInput" rows="3" placeholder="المسار التعليمي"></textarea>
-            <input type="text" id="skillsInput" placeholder="المهارات (افصل بفاصلة ,)">
-
-            <button onclick="generatePDF()" class="magic-btn">تحميل التصميم الجديد 🚀</button>
+            <button onclick="makePDF()" class="btn-generate">توليد التصميم الفخم 🚀</button>
         </div>
     </div>
 
-    <div id="pdf-wrapper" style="display: none;">
-        <div id="cv-template" class="canva-cv">
-            <div class="top-shape"></div>
+    <div id="pdf-content">
+        <div id="target-cv" class="cv-page">
+            <div class="top-banner"></div>
             
-            <aside class="sidebar">
-                <div class="photo-box">
-                    <img id="pdfPhoto" src="">
-                </div>
-                
-                <section class="side-content">
-                    <h3>اتصل بي</h3>
-                    <p id="pdfAddress"></p>
-                    <p id="pdfPhone"></p>
-                    <p id="pdfEmail"></p>
-                    
-                    <h3 style="margin-top: 30px;">المهارات</h3>
-                    <div id="pdfSkills" class="skills-wrap"></div>
+            <aside class="side-bar">
+                <div class="img-frame"><img id="resPhoto" src=""></div>
+                <section>
+                    <h3>تواصل معي</h3>
+                    <div id="resLoc" class="contact-info"></div>
+                    <div id="resPhone" class="contact-info"></div>
+                    <div id="resEmail" class="contact-info"></div>
+                </section>
+                <section style="margin-top: 40px;">
+                    <h3>المهارات</h3>
+                    <div id="resSkills"></div>
                 </section>
             </aside>
 
-            <main class="main-body">
-                <header class="main-header">
-                    <h1 id="pdfName"></h1>
-                    <h2 id="pdfJob"></h2>
-                    <div class="line-divider"></div>
-                </header>
-
-                <div class="info-section">
-                    <h4>نبذة شخصية</h4>
-                    <p id="pdfAbout" class="text-p"></p>
+            <main class="main-bar">
+                <h1 id="resName" class="cv-name"></h1>
+                <h2 id="resJob" class="cv-title"></h2>
+                
+                <div class="section-box">
+                    <h4>الملف الشخصي</h4>
+                    <p id="resAbout" class="section-text"></p>
                 </div>
 
-                <div class="info-section">
-                    <h4>الخبرة المهنية</h4>
-                    <div id="pdfExp" class="text-p"></div>
+                <div class="section-box">
+                    <h4>الخبرة العملية</h4>
+                    <div id="resExp" class="section-text"></div>
                 </div>
 
-                <div class="info-section">
-                    <h4>المسار التعليمي</h4>
-                    <div id="pdfEdu" class="text-p"></div>
+                <div class="section-box">
+                    <h4>التعليم</h4>
+                    <div id="resEdu" class="section-text"></div>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let imgData = "";
+        function loadImg(e) {
+            const r = new FileReader();
+            r.onload = () => { imgData = r.result; document.getElementById('resPhoto').src = imgData; };
+            r.readAsDataURL(e.target.files[0]);
+        }
+
+        function makePDF() {
+            // ملء البيانات في القالب
+            document.getElementById('resName').innerText = document.getElementById('iName').value || "اسمك هنا";
+            document.getElementById('resJob').innerText = document.getElementById('iJob').value || "المسمى الوظيفي";
+            document.getElementById('resAbout').innerText = document.getElementById('iAbout').value;
+            document.getElementById('resExp').innerText = document.getElementById('iExp').value;
+            document.getElementById('resEdu').innerText = document.getElementById('iEdu').value;
+            document.getElementById('resEmail').innerText = "✉️ " + document.getElementById('iEmail').value;
+            document.getElementById('resPhone').innerText = "📞 " + document.getElementById('iPhone').value;
+            document.getElementById('resLoc').innerText = "📍 " + document.getElementById('iLoc').value;
+
+            const sContainer = document.getElementById('resSkills');
+            sContainer.innerHTML = "";
+            document.getElementById('iSkills').value.split(',').forEach(s => {
+                if(s.trim()) sContainer.innerHTML += `<span class="skill-pill">${s.trim()}</span>`;
+            });
+
+            const element = document.getElementById('target-cv');
+            const opt = {
+                margin: 0,
+                filename: 'Professional_CV.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // تشغيل التحميل
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
 </body>
 </html>
