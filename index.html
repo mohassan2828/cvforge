@@ -1,54 +1,241 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>منشئ السيرة الذاتية</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Flow | منصة بناء السير الذاتية الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1; /* Indigo SaaS Color */
+            --primary-dark: #4f46e5;
+            --secondary: #1e293b; /* Slate 800 */
+            --accent: #d4af37; /* Gold for CV */
+            --bg-site: #f8fafc;
+            --text-main: #0f172a;
+        }
 
-  <!-- PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--bg-site); 
+            margin: 0; color: var(--text-main);
+        }
+
+        /* --- واجهة الموقع (SaaS Dashboard UI) --- */
+        .navbar {
+            background: white; padding: 1rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+
+        .main-container {
+            max-width: 1200px; margin: 2rem auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+            padding: 0 20px;
+        }
+
+        .form-section {
+            background: white; padding: 2rem; border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+        
+        input, textarea {
+            width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0;
+            border-radius: 0.75rem; font-family: inherit; transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+        .btn-primary {
+            width: 100%; padding: 1rem; background: var(--primary);
+            color: white; border: none; border-radius: 0.75rem;
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* --- معاينة مباشرة (Live Preview) --- */
+        .preview-section {
+            position: sticky; top: 2rem; height: fit-content;
+            background: #cbd5e1; padding: 1rem; border-radius: 1rem;
+            display: flex; justify-content: center; align-items: flex-start;
+        }
+
+        /* --- تصميم الـ PDF (Canva Premium Style) --- */
+        .cv-render {
+            width: 210mm; height: 297mm; background: white;
+            display: flex !important; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(0.45); transform-origin: top center; /* تصغير المعاينة فقط */
+        }
+
+        .cv-sidebar {
+            width: 32%; background: var(--secondary) !important;
+            color: white !important; padding: 40px 25px;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .cv-photo {
+            width: 150px; height: 150px; border: 4px solid var(--accent);
+            border-radius: 1rem; margin: 0 auto 30px; overflow: hidden;
+        }
+
+        .cv-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        .cv-sidebar h3 { color: var(--accent) !important; font-size: 1.2rem; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-top: 30px; }
+        .cv-sidebar p { font-size: 0.85rem; color: #94a3b8 !important; margin: 10px 0; }
+
+        .cv-main { width: 68%; padding: 60px 40px; position: relative; }
+        .cv-header h1 { font-size: 3.5rem; margin: 0; color: var(--secondary) !important; line-height: 1; }
+        .cv-header h2 { color: var(--accent) !important; font-size: 1.5rem; font-weight: 400; margin: 10px 0 40px; }
+
+        .cv-section { margin-bottom: 30px; }
+        .cv-section h4 { 
+            display: flex; align-items: center; gap: 10px;
+            background: #f1f5f9 !important; padding: 10px 15px;
+            border-right: 5px solid var(--accent); color: var(--secondary) !important;
+            margin-bottom: 15px; -webkit-print-color-adjust: exact;
+        }
+
+        .cv-text { font-size: 1rem; line-height: 1.8; color: #334155 !important; white-space: pre-line; }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .preview-section { display: none; } /* إخفاء المعاينة في الموبايل لسهولة الإدخال */
+        }
+    </style>
 </head>
+<body>
 
-<body class="light">
+    <nav class="navbar">
+        <div class="logo">CV<span style="color:var(--text-main)">Flow.</span></div>
+        <div style="font-size: 0.8rem; color: #64748b;">SaaS Builder v2.0</div>
+    </nav>
 
-<header>
-  <h1>منشئ السيرة الذاتية الاحترافي</h1>
-  <div class="controls">
-    <select id="templateSelect">
-      <option value="template1">Template 1</option>
-      <option value="template2">Template 2</option>
-    </select>
-    <button onclick="toggleTheme()">🌙 / ☀️</button>
-  </div>
-</header>
+    <div class="main-container">
+        <div class="form-section">
+            <h2 style="margin-top:0">بيانات السيرة الذاتية</h2>
+            
+            <div class="input-group">
+                <label>الصورة الشخصية</label>
+                <input type="file" id="inPhoto" accept="image/*" onchange="updatePreview()">
+            </div>
 
-<main class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="inName" placeholder="محمد صالح" oninput="updatePreview()">
+                </div>
+                <div class="input-group">
+                    <label>المسمى الوظيفي</label>
+                    <input type="text" id="inJob" placeholder="مدير مطعم" oninput="updatePreview()">
+                </div>
+            </div>
 
-  <!-- Form -->
-  <section class="form">
-    <input type="file" id="photo" accept="image/*">
-    <input type="text" id="name" placeholder="الاسم الكامل">
-    <input type="text" id="job" placeholder="المسمى الوظيفي">
-    <textarea id="summary" placeholder="نبذة مختصرة عنك"></textarea>
-    <textarea id="skills" placeholder="المهارات (افصل بفاصلة)"></textarea>
+            <div class="input-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="inEmail" placeholder="name@email.com" oninput="updatePreview()">
+            </div>
 
-    <button onclick="generateCV()">تحديث السيرة</button>
-    <button class="download" onclick="downloadPDF()">تحميل PDF</button>
-  </section>
+            <div class="input-group">
+                <label>نبذة تعريفية</label>
+                <textarea id="inAbout" rows="3" placeholder="تحدث عن نفسك بإيجاز..." oninput="updatePreview()"></textarea>
+            </div>
 
-  <!-- CV -->
-  <section class="cv template1" id="cv">
-    <img id="cv-photo">
-    <h2 id="cv-name"></h2>
-    <h4 id="cv-job"></h4>
-    <p id="cv-summary"></p>
+            <div class="input-group">
+                <label>الخبرات المهنية</label>
+                <textarea id="inExp" rows="4" placeholder="أذكر خبراتك..." oninput="updatePreview()"></textarea>
+            </div>
 
-    <h3>المهارات</h3>
-    <ul id="cv-skills"></ul>
-  </section>
+            <div class="input-group">
+                <label>التعليم</label>
+                <textarea id="inEdu" rows="2" placeholder="المؤهلات الدراسية..." oninput="updatePreview()"></textarea>
+            </div>
 
-</main>
+            <button class="btn-primary" onclick="downloadCV()">تصدير كملف PDF احترافي 📥</button>
+        </div>
 
-<script src="js/app.js"></script>
+        <div class="preview-section">
+            <div id="cv-render" class="cv-render">
+                <aside class="cv-sidebar">
+                    <div class="cv-photo">
+                        <img id="outPhoto" src="https://via.placeholder.com/150">
+                    </div>
+                    <h3>تواصل معي</h3>
+                    <p id="outEmail">Email@example.com</p>
+                    <p id="outPhone">0000000000</p>
+                    
+                    <h3>المهارات</h3>
+                    <p>• حل المشكلات</p>
+                    <p>• القيادة</p>
+                </aside>
+                
+                <main class="cv-main">
+                    <div class="cv-header">
+                        <h1 id="outName">محمد حسن</h1>
+                        <h2 id="outJob">مدير مطعم</h2>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h4>الخلاصة المهنية</h4>
+                        <div id="outAbout" class="cv-text">نبذة عن خبراتك تظهر هنا...</div>
+                    </div>
+
+                    <div class="cv-section">
+                        <h4>الخبرة العملية</h4>
+                        <div id="outExp" class="cv-text">تفاصيل عملك السابق...</div>
+                    </div>
+
+                    <div class="cv-section">
+                        <h4>التعليم</h4>
+                        <div id="outEdu" class="cv-text">مؤهلاتك العلمية...</div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            document.getElementById('outName').innerText = document.getElementById('inName').value || "محمد حسن";
+            document.getElementById('outJob').innerText = document.getElementById('inJob').value || "مدير مطعم";
+            document.getElementById('outAbout').innerText = document.getElementById('inAbout').value || "نبذة عن خبراتك تظهر هنا...";
+            document.getElementById('outExp').innerText = document.getElementById('inExp').value || "تفاصيل عملك السابق...";
+            document.getElementById('outEdu').innerText = document.getElementById('inEdu').value || "مؤهلاتك العلمية...";
+            document.getElementById('outEmail').innerText = document.getElementById('inEmail').value || "Email@example.com";
+
+            const file = document.getElementById('inPhoto').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById('outPhoto').src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function downloadCV() {
+            const element = document.getElementById('cv-render');
+            // إزالة الـ scale مؤقتاً للتحميل بجودة عالية
+            element.style.transform = "none";
+            
+            const opt = {
+                margin: 0,
+                filename: 'Professional-CV.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 3, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // إعادة الـ scale بعد التحميل للمعاينة
+                element.style.transform = "scale(0.45)";
+            });
+        }
+    </script>
 </body>
 </html>
