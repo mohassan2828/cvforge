@@ -13,17 +13,17 @@ function processImage(event) {
 }
 
 function generatePDF() {
-    // 1. ملء البيانات في القالب
-    document.getElementById('pdfName').innerText = document.getElementById('nameInput').value || "الاسم بالكامل";
+    // 1. ملء البيانات في القالب من المدخلات
+    document.getElementById('pdfName').innerText = document.getElementById('nameInput').value || "الاسم الكامل";
     document.getElementById('pdfJob').innerText = document.getElementById('jobInput').value || "المسمى الوظيفي";
-    document.getElementById('pdfAbout').innerText = document.getElementById('aboutInput').value || "نبذة تعريفية...";
-    document.getElementById('pdfExp').innerText = document.getElementById('expInput').value || "الخبرات...";
-    document.getElementById('pdfEdu').innerText = document.getElementById('eduInput').value || "التعليم...";
+    document.getElementById('pdfAbout').innerText = document.getElementById('aboutInput').value || "";
+    document.getElementById('pdfExp').innerText = document.getElementById('expInput').value || "";
+    document.getElementById('pdfEdu').innerText = document.getElementById('eduInput').value || "";
     
     // بيانات الاتصال
-    document.getElementById('pdfEmail').innerText = "✉️ " + (document.getElementById('emailInput').value || "Email");
-    document.getElementById('pdfPhone').innerText = "📞 " + (document.getElementById('phoneInput').value || "Phone");
-    document.getElementById('pdfAddress').innerText = "📍 " + (document.getElementById('addressInput').value || "Address");
+    document.getElementById('pdfEmail').innerText = "✉️ " + (document.getElementById('emailInput').value || "");
+    document.getElementById('pdfPhone').innerText = "📞 " + (document.getElementById('phoneInput').value || "");
+    document.getElementById('pdfAddress').innerText = "📍 " + (document.getElementById('addressInput').value || "");
 
     // معالجة المهارات (تحويل الكلمات لنقاط)
     const skillsInput = document.getElementById('skillsInput').value;
@@ -31,25 +31,40 @@ function generatePDF() {
     skillsList.innerHTML = "";
     if(skillsInput) {
         skillsInput.split(',').forEach(skill => {
-            if(skill.trim()) skillsList.innerHTML += `<li>${skill.trim()}</li>`;
+            if(skill.trim()) {
+                let li = document.createElement('li');
+                li.innerText = skill.trim();
+                skillsList.appendChild(li);
+            }
         });
     }
 
-    // 2. تفعيل عملية التحميل
+    // 2. إعداد عملية التحميل
     const element = document.getElementById('cv-template');
     const wrapper = document.getElementById('pdf-wrapper');
     
-    wrapper.style.display = 'block'; // إظهار مؤقت
+    // جعل العنصر مرئياً للمتصفح قبل التحويل
+    wrapper.style.display = 'block';
 
     const options = {
         margin: 0,
-        filename: 'Professional-CV.pdf',
+        filename: 'My-Professional-CV.pdf',
         image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+        html2canvas: { 
+            scale: 3, 
+            useCORS: true, 
+            letterRendering: true,
+            allowTaint: false
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(options).from(element).save().then(() => {
-        wrapper.style.display = 'none'; // إخفاء بعد التحميل
-    });
+    // 3. تنفيذ التحميل بعد تأخير بسيط (700ms) للتأكد من رندرة النصوص
+    setTimeout(() => {
+        html2pdf().set(options).from(element).save().then(() => {
+            // لا حاجة لإخفائه لأنه بعيد عن الشاشة أصلاً بالـ CSS الجديد
+        }).catch(err => {
+            console.error("PDF Error: ", err);
+        });
+    }, 700);
 }
