@@ -1,1 +1,60 @@
 
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.form {
+  width: 35%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.form input, .form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+.form button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+
+.cv {
+  width: 60%;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.cv img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.cv h1 {
+  margin: 10px 0 0;
+}
+
+.cv h3 {
+  color: #555;
+}
+
+.cv ul {
+  padding-left: 20px;
+}
