@@ -40,14 +40,22 @@ input, textarea {
     margin-top: 20px; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
 }
 
+/* حل مشكلة الصفحة البيضاء: إرسال الـ Template بعيداً عن الشاشة بدلاً من إخفائه كلياً */
+#pdf-wrapper {
+    position: absolute;
+    left: -5000px;
+    top: 0;
+}
+
 /* تنسيق الـ PDF الجبار (A4) */
 .pdf-design {
-    width: 210mm; min-height: 297mm; display: flex;
-    background: white; color: #334155;
+    width: 210mm; min-height: 297mm; display: flex !important;
+    background: white !important; color: #334155 !important;
+    visibility: visible !important;
 }
 
 .sidebar {
-    width: 32%; background: var(--primary); color: white;
+    width: 32%; background: var(--primary) !important; color: white !important;
     padding: 40px 20px; display: flex; flex-direction: column;
 }
 
@@ -58,22 +66,27 @@ input, textarea {
 }
 
 .side-item h4 {
-    color: var(--accent); font-size: 18px;
+    color: var(--accent) !important; font-size: 18px;
     border-bottom: 1px solid #334155; padding-bottom: 5px;
 }
 
-.side-item p { font-size: 13px; line-height: 1.8; margin: 5px 0; }
-.side-item ul { padding-right: 20px; font-size: 14px; }
+.side-item p { font-size: 13px; line-height: 1.8; margin: 5px 0; color: white !important; }
+.side-item ul { padding-right: 20px; font-size: 14px; color: white !important; }
 
-.main-content { width: 68%; padding: 50px 35px; }
-.header-main h1 { font-size: 40px; color: var(--primary); margin: 0; }
-.header-main h2 { font-size: 22px; color: var(--accent); margin-bottom: 20px; }
+.main-content { width: 68%; padding: 50px 35px; background: white !important; }
+.header-main h1 { font-size: 40px; color: var(--primary) !important; margin: 0; }
+.header-main h2 { font-size: 22px; color: var(--accent) !important; margin-bottom: 20px; }
 
 .cv-section { margin-bottom: 30px; }
 .cv-section h4 {
-    background: #f1f5f9; padding: 10px;
+    background: #f1f5f9 !important; padding: 10px;
     border-right: 6px solid var(--accent);
-    color: var(--primary); font-size: 18px;
+    color: var(--primary) !important; font-size: 18px;
 }
 
-.text-block { white-space: pre-line; line-height: 1.7; font-size: 15px; color: #475569; }
+.text-block { white-space: pre-line; line-height: 1.7; font-size: 15px; color: #475569 !important; }
+
+/* تحسينات إضافية للتأكد من الطباعة */
+@media print {
+    #cv-template { display: flex !important; }
+}
