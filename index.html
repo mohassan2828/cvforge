@@ -1,46 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>CV Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <title>منشئ السيرة الذاتية</title>
+  <link rel="stylesheet" href="css/style.css">
 
-  <!-- jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
 
-<div class="container">
+<body class="light">
+
+<header>
+  <h1>منشئ السيرة الذاتية الاحترافي</h1>
+  <div class="controls">
+    <select id="templateSelect">
+      <option value="template1">Template 1</option>
+      <option value="template2">Template 2</option>
+    </select>
+    <button onclick="toggleTheme()">🌙 / ☀️</button>
+  </div>
+</header>
+
+<main class="container">
 
   <!-- Form -->
-  <div class="form">
-    <h2>Create Your CV</h2>
-
+  <section class="form">
     <input type="file" id="photo" accept="image/*">
-    <input type="text" id="name" placeholder="Full Name">
-    <input type="text" id="title" placeholder="Job Title">
-    <input type="text" id="address" placeholder="Address">
-    <input type="text" id="phone" placeholder="Phone Number">
-    <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+    <input type="text" id="name" placeholder="الاسم الكامل">
+    <input type="text" id="job" placeholder="المسمى الوظيفي">
+    <textarea id="summary" placeholder="نبذة مختصرة عنك"></textarea>
+    <textarea id="skills" placeholder="المهارات (افصل بفاصلة)"></textarea>
 
-    <button onclick="generateCV()">Generate CV</button>
-    <button onclick="downloadPDF()">Download PDF</button>
-  </div>
+    <button onclick="generateCV()">تحديث السيرة</button>
+    <button class="download" onclick="downloadPDF()">تحميل PDF</button>
+  </section>
 
-  <!-- Preview -->
-  <div class="cv" id="cv">
+  <!-- CV -->
+  <section class="cv template1" id="cv">
     <img id="cv-photo">
-    <h1 id="cv-name"></h1>
-    <h3 id="cv-title"></h3>
-    <p id="cv-address"></p>
-    <p id="cv-phone"></p>
+    <h2 id="cv-name"></h2>
+    <h4 id="cv-job"></h4>
+    <p id="cv-summary"></p>
 
-    <h4>Skills</h4>
+    <h3>المهارات</h3>
     <ul id="cv-skills"></ul>
-  </div>
+  </section>
 
-</div>
+</main>
 
-<script src="script.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
