@@ -3,82 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional CV Pro</title>
+    <title>Canva Style CV Maker</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
     <div class="app-container">
-        <header>
-            <h1>CV<span>PRO</span></h1>
-            <p>أنشئ سيرة ذاتية احترافية متكاملة للموبايل</p>
+        <header class="app-header">
+            <div class="logo-icon">✨</div>
+            <h1>مُصمم الـ CV الذكي</h1>
+            <p>حوّل بياناتك إلى تحفة فنية في ثوانٍ</p>
         </header>
 
-        <section class="form-card">
-            <h3 class="section-title">👤 البيانات الأساسية</h3>
-            <div class="input-group">
-                <label>اختر صورة شخصية</label>
+        <div class="form-card">
+            <div class="step-box">
+                <label>📸 الصورة الشخصية</label>
                 <input type="file" id="imageInput" accept="image/*" onchange="processImage(event)">
+                
+                <label>👤 المعلومات الأساسية</label>
+                <input type="text" id="nameInput" placeholder="الاسم الكامل">
+                <input type="text" id="jobInput" placeholder="المسمى الوظيفي">
             </div>
-            <input type="text" id="nameInput" placeholder="الاسم الكامل">
-            <input type="text" id="jobInput" placeholder="المسمى الوظيفي (مثلاً: مهندس برمجيات)">
-            <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
-            <input type="tel" id="phoneInput" placeholder="رقم الهاتف">
-            <input type="text" id="addressInput" placeholder="العنوان (المدينة، الدولة)">
 
-            <h3 class="section-title">📝 النبذة التعريفية</h3>
-            <textarea id="aboutInput" rows="3" placeholder="اكتب ملخصاً مهنياً عن مهاراتك وأهدافك..."></textarea>
+            <div class="step-box">
+                <label>📧 بيانات التواصل</label>
+                <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
+                <input type="tel" id="phoneInput" placeholder="رقم الهاتف">
+                <input type="text" id="addressInput" placeholder="العنوان">
+            </div>
 
-            <h3 class="section-title">💼 الخبرة والتعليم</h3>
-            <textarea id="expInput" rows="5" placeholder="الخبرات العملية (كل وظيفة في سطر)"></textarea>
-            <textarea id="eduInput" rows="3" placeholder="المؤهلات التعليمية"></textarea>
+            <div class="step-box">
+                <label>📄 المحتوى المهني</label>
+                <textarea id="aboutInput" rows="3" placeholder="نبذة تعريفية ملهمة..."></textarea>
+                <textarea id="expInput" rows="5" placeholder="الخبرات (افصل بين كل خبرة بنقطة)"></textarea>
+                <textarea id="eduInput" rows="3" placeholder="التعليم"></textarea>
+                <input type="text" id="skillsInput" placeholder="المهارات (مثلاً: قيادة، برمجة، تصميم)">
+            </div>
 
-            <h3 class="section-title">🛠 المهارات</h3>
-            <input type="text" id="skillsInput" placeholder="المهارات (افصل بينها بفاصلة ,)">
-
-            <button onclick="generatePDF()" class="download-btn">تحميل الـ CV الجبار (PDF) ✨</button>
-        </section>
+            <button onclick="generatePDF()" class="magic-btn">توليد التصميم الجبّار 🚀</button>
+        </div>
     </div>
 
-    <div id="pdf-wrapper" style="display: none;">
-        <div id="cv-template" class="pdf-design">
-            <div class="sidebar">
-                <img id="pdfPhoto" src="" style="display:none;">
-                <div class="side-item">
-                    <h4>تواصل معي</h4>
-                    <p id="pdfEmail"></p>
-                    <p id="pdfPhone"></p>
-                    <p id="pdfAddress"></p>
-                </div>
-                <div class="side-item">
-                    <h4>المهارات</h4>
-                    <ul id="pdfSkills"></ul>
-                </div>
-            </div>
+    <div id="pdf-wrapper">
+        <div id="cv-template" class="canva-cv">
+            <div class="bg-shape"></div>
             
-            <div class="main-content">
-                <div class="header-main">
-                    <h1 id="pdfName"></h1>
-                    <h2 id="pdfJob"></h2>
+            <aside class="left-panel">
+                <div class="photo-container">
+                    <img id="pdfPhoto" src="">
                 </div>
                 
-                <div class="cv-section">
-                    <h4>الملف الشخصي</h4>
+                <section class="side-content">
+                    <h3>اتصل بي</h3>
+                    <div class="contact-item"><span class="icon">📍</span> <span id="pdfAddress"></span></div>
+                    <div class="contact-item"><span class="icon">📞</span> <span id="pdfPhone"></span></div>
+                    <div class="contact-item"><span class="icon">✉️</span> <span id="pdfEmail"></span></div>
+                    
+                    <h3 style="margin-top: 40px;">المهارات</h3>
+                    <div id="pdfSkills" class="skills-grid"></div>
+                </section>
+            </aside>
+
+            <main class="right-panel">
+                <header class="cv-header">
+                    <h1 id="pdfName"></h1>
+                    <h2 id="pdfJob"></h2>
+                    <div class="accent-line"></div>
+                </header>
+
+                <section class="main-section">
+                    <h4><span class="dot"></span> نبذة شخصية</h4>
                     <p id="pdfAbout"></p>
-                </div>
+                </section>
 
-                <div class="cv-section">
-                    <h4>الخبرة العملية</h4>
-                    <div id="pdfExp" class="text-block"></div>
-                </div>
+                <section class="main-section">
+                    <h4><span class="dot"></span> الخبرة المهنية</h4>
+                    <div id="pdfExp" class="rich-text"></div>
+                </section>
 
-                <div class="cv-section">
-                    <h4>التعليم</h4>
-                    <div id="pdfEdu" class="text-block"></div>
-                </div>
-            </div>
+                <section class="main-section">
+                    <h4><span class="dot"></span> المسار التعليمي</h4>
+                    <div id="pdfEdu" class="rich-text"></div>
+                </section>
+            </main>
         </div>
     </div>
 
