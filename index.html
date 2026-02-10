@@ -46,6 +46,9 @@
         input:focus { border-color: var(--primary); }
 
         .btn-create { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 15px; color: white; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
+        
+        /* زر المسح */
+        .btn-clear { width: 100%; padding: 10px; background: #fee2e2; color: #ef4444; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
 
         /* --- PDF Design --- */
         #pdf-hideout { position: absolute; left: -9999px; top: 0; }
@@ -88,6 +91,8 @@
     <div class="app-container">
         <div class="card-editor">
             
+            <button class="btn-clear" onclick="clearSavedData()">🗑️ مسح جميع البيانات المخزنة</button>
+
             <div class="culture-box">
                 <label>🗺️ ثقافة القالب المستهدفة:</label>
                 <div class="culture-grid">
@@ -97,31 +102,31 @@
                 </div>
             </div>
 
-            <div class="input-box"><label>الاسم الكامل</label><input type="text" id="inName" placeholder="أحمد محمد"></div>
-            <div class="input-box"><label>المسمى الوظيفي</label><input type="text" id="inJob" placeholder="مهندس برمجيات"></div>
+            <div class="input-box"><label>الاسم الكامل</label><input type="text" id="inName" oninput="saveToLocal()" placeholder="أحمد محمد"></div>
+            <div class="input-box"><label>المسمى الوظيفي</label><input type="text" id="inJob" oninput="saveToLocal()" placeholder="مهندس برمجيات"></div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="input-box"><label>تاريخ الميلاد</label><input type="date" id="inBirth"></div>
-                <div class="input-box"><label>العنوان / المدينة</label><input type="text" id="inAddress" placeholder="القاهرة، مصر"></div>
+                <div class="input-box"><label>تاريخ الميلاد</label><input type="date" id="inBirth" oninput="saveToLocal()"></div>
+                <div class="input-box"><label>العنوان / المدينة</label><input type="text" id="inAddress" oninput="saveToLocal()" placeholder="القاهرة، مصر"></div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="input-box"><label>رقم الهاتف</label><input type="text" id="inPhone"></div>
-                <div class="input-box"><label>البريد الإلكتروني</label><input type="email" id="inEmail"></div>
+                <div class="input-box"><label>رقم الهاتف</label><input type="text" id="inPhone" oninput="saveToLocal()"></div>
+                <div class="input-box"><label>البريد الإلكتروني</label><input type="email" id="inEmail" oninput="saveToLocal()"></div>
             </div>
 
             <div class="input-box"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
 
-            <div class="input-box"><label id="l-about">النبذة الشخصية</label><textarea id="inAbout" rows="3"></textarea></div>
-            <div class="input-box"><label id="l-exp">الخبرات المهنية</label><textarea id="inExp" rows="4"></textarea></div>
-            <div class="input-box"><label id="l-awards">الإنجازات والمشاريع</label><textarea id="inAwards" rows="3"></textarea></div>
+            <div class="input-box"><label id="l-about">النبذة الشخصية</label><textarea id="inAbout" oninput="saveToLocal()" rows="3"></textarea></div>
+            <div class="input-box"><label id="l-exp">الخبرات المهنية</label><textarea id="inExp" oninput="saveToLocal()" rows="4"></textarea></div>
+            <div class="input-box"><label id="l-awards">الإنجازات والمشاريع</label><textarea id="inAwards" oninput="saveToLocal()" rows="3"></textarea></div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="input-box"><label>التعليم</label><textarea id="inEdu" rows="3"></textarea></div>
-                <div class="input-box"><label>اللغات</label><textarea id="inLang" rows="3"></textarea></div>
+                <div class="input-box"><label>التعليم</label><textarea id="inEdu" oninput="saveToLocal()" rows="3"></textarea></div>
+                <div class="input-box"><label>اللغات</label><textarea id="inLang" oninput="saveToLocal()" rows="3"></textarea></div>
             </div>
             
-            <div class="input-box"><label>المهارات الرئيسية</label><input type="text" id="inSkills" placeholder="برمجة، قيادة، تصميم"></div>
+            <div class="input-box"><label>المهارات الرئيسية</label><input type="text" id="inSkills" oninput="saveToLocal()" placeholder="برمجة، قيادة، تصميم"></div>
 
             <button class="btn-create" onclick="generateCV()">
                 <i class="fas fa-download"></i> حفظ بصيغة PDF الاحترافية
@@ -135,8 +140,7 @@
                 <img id="outPhoto" class="cv-photo" src="">
                 
                 <div class="s-title" id="side-contact">التواصل</div>
-                <div id="outContact" class="s-content">
-                    </div>
+                <div id="outContact" class="s-content"></div>
 
                 <div class="s-title" id="side-edu">التعليم</div>
                 <div id="outEdu" class="s-content"></div>
@@ -174,12 +178,37 @@
 
     <script>
         let currentCulture = 'ar';
+        const inputIds = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inAwards', 'inEdu', 'inLang', 'inSkills'];
 
         const cultures = {
             ar: { dir: 'rtl', about: 'النبذة الشخصية', exp: 'الخبرات المهنية', awards: 'الإنجازات والمشاريع', contact: 'التواصل', edu: 'التعليم', lang: 'اللغات', skills: 'المهارات' },
             us: { dir: 'ltr', about: 'Professional Summary', exp: 'Work History', awards: 'Key Milestones', contact: 'Contact Details', edu: 'Education', lang: 'Languages', skills: 'Expertise' },
             eu: { dir: 'ltr', about: 'Profile', exp: 'Professional Experience', awards: 'Projects', contact: 'Information', edu: 'Academic History', lang: 'Language Proficiency', skills: 'Core Skills' }
         };
+
+        // تحميل البيانات عند فتح الصفحة
+        window.onload = () => {
+            inputIds.forEach(id => {
+                const saved = localStorage.getItem(id);
+                if (saved) document.getElementById(id).value = saved;
+            });
+            const savedPhoto = localStorage.getItem('userPhoto');
+            if (savedPhoto) document.getElementById('outPhoto').src = savedPhoto;
+        };
+
+        // حفظ البيانات تلقائياً
+        function saveToLocal() {
+            inputIds.forEach(id => {
+                localStorage.setItem(id, document.getElementById(id).value);
+            });
+        }
+
+        function clearSavedData() {
+            if(confirm("سيتم حذف جميع البيانات المحفوظة، هل أنت متأكد؟")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
 
         function setCulture(type) {
             currentCulture = type;
@@ -190,7 +219,6 @@
             document.getElementById('mainHtml').dir = c.dir;
             document.getElementById('final-document').dir = c.dir;
             
-            // تحديث العناوين
             const labels = ['about', 'exp', 'awards', 'contact', 'edu', 'lang', 'skills'];
             labels.forEach(id => {
                 const el = document.getElementById(`out-l-${id}`) || document.getElementById(`side-${id}`);
@@ -202,16 +230,18 @@
 
         document.getElementById('inPhoto').onchange = e => {
             const r = new FileReader();
-            r.onload = () => document.getElementById('outPhoto').src = r.result;
+            r.onload = () => {
+                const base64 = r.result;
+                document.getElementById('outPhoto').src = base64;
+                localStorage.setItem('userPhoto', base64);
+            };
             if(e.target.files[0]) r.readAsDataURL(e.target.files[0]);
         };
 
         async function generateCV() {
-            // بيانات الرأس
             document.getElementById('outName').innerText = document.getElementById('inName').value || "Full Name";
             document.getElementById('outJob').innerText = document.getElementById('inJob').value || "Professional Title";
             
-            // بيانات التواصل (بما فيها العنوان وتاريخ الميلاد)
             const phone = document.getElementById('inPhone').value;
             const email = document.getElementById('inEmail').value;
             const birth = document.getElementById('inBirth').value;
@@ -225,7 +255,6 @@
             
             document.getElementById('outContact').innerHTML = contactHtml;
 
-            // باقي البيانات
             document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
             document.getElementById('outExp').innerText = document.getElementById('inExp').value;
             document.getElementById('outEdu').innerText = document.getElementById('inEdu').value;
@@ -233,7 +262,6 @@
             document.getElementById('outAwards').innerText = document.getElementById('inAwards').value;
             document.getElementById('outSkills').innerText = document.getElementById('inSkills').value;
 
-            // توليد الـ PDF
             const element = document.getElementById('final-document');
             const canvas = await html2canvas(element, { scale: 3, useCORS: true });
             const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
