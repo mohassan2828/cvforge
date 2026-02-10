@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CVForge | صانع السير الذاتية الاحترافي</title>
+    <title>CVForge | احترافية بلا حدود</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -13,254 +13,243 @@
     
     <style>
         :root { 
-            --primary: #6366f1; 
-            --primary-dark: #4f46e5;
-            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --text-dark: #1e293b;
-            --gold: #f59e0b;
+            --primary: #8b5cf6; /* بنفسجي نيون */
+            --accent: #d1d5db;
+            --bg-dark: #0f172a; /* أسود ملكي */
+            --card-dark: #1e293b;
+            --text-main: #f8fafc;
         }
         
+        /* منع أي حركة جانبية أو صفحات بيضاء */
         html, body { 
             height: 100%; 
             margin: 0; 
+            padding: 0;
             font-family: 'Cairo', sans-serif; 
-            background: var(--bg-gradient); 
-            display: flex;
-            flex-direction: column;
+            background: var(--bg-dark); 
+            color: var(--text-main);
+            overflow-x: hidden; /* يمنع التمرير الجانبي تماماً */
+            width: 100%;
+            position: relative;
         }
 
         /* Navbar */
         .navbar { 
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
-            padding: 15px 20px; 
+            padding: 15px; 
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky; top: 0; z-index: 1000;
         }
         .logo { 
             font-family: 'Poppins', sans-serif;
-            font-weight: 800; font-size: 26px; 
+            font-weight: 800; font-size: 24px; 
             color: var(--primary); 
-            letter-spacing: -1px;
+            text-transform: uppercase;
         }
-        .logo span { color: var(--text-dark); }
 
-        /* Main App */
-        .main-content {
-            flex: 1;
+        /* Main Container */
+        .app-container {
             padding: 20px;
-            max-width: 750px;
+            max-width: 600px;
             margin: 0 auto;
-            width: 100%;
             box-sizing: border-box;
         }
 
-        .header-tag { text-align: center; margin-bottom: 20px; }
-        .header-tag h2 { font-size: 22px; color: var(--text-dark); margin: 0; }
+        .header-msg { text-align: center; margin-bottom: 25px; }
+        .header-msg h1 { font-size: 20px; font-weight: 900; margin: 0; }
+        .header-msg p { color: #94a3b8; font-size: 13px; margin-top: 5px; }
 
-        /* Card Styling */
-        .glass-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        /* Modern Dark Card */
+        .dark-card {
+            background: var(--card-dark);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 8px; font-size: 13px; color: var(--text-dark); }
-        label i { color: var(--primary); font-size: 14px; }
+        .field { margin-bottom: 15px; }
+        label { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
+        label i { color: var(--primary); }
         
         input, textarea { 
-            width: 100%; padding: 12px 15px; border: 1.5px solid #eef2f6; 
+            width: 100%; padding: 12px; border: 1px solid #334155; 
             border-radius: 12px; font-family: inherit; box-sizing: border-box; 
-            font-size: 15px; background: #f8fafc; transition: 0.3s;
+            font-size: 15px; background: #0f172a; color: white; transition: 0.3s;
         }
         
         input:focus, textarea:focus { 
-            border-color: var(--primary); background: #fff; outline: none; 
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            border-color: var(--primary); outline: none; 
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
 
-        .btn-generate { 
-            width: 100%; padding: 18px; 
-            background: var(--primary); 
-            color: #fff; border: none; border-radius: 16px; 
-            font-weight: 800; font-size: 18px; cursor: pointer; 
-            margin-top: 15px; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        .btn-action { 
+            width: 100%; padding: 15px; 
+            background: linear-gradient(to left, var(--primary), #a855f7); 
+            color: white; border: none; border-radius: 14px; 
+            font-weight: 800; font-size: 16px; cursor: pointer; 
+            margin-top: 10px; transition: 0.3s;
         }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* --- PDF Template (Hidden) --- */
+        /* --- PDF Template (Strictly A4) --- */
         #cv-render-area { position: absolute; left: -9999px; top: 0; }
-        .cv-paper { width: 210mm; height: 296.8mm; background: #fff; display: flex; flex-direction: column; direction: rtl; }
+        .cv-paper { width: 210mm; height: 296.8mm; background: #fff; display: flex; flex-direction: column; direction: rtl; color: #1e293b; }
         
-        .cv-head { padding: 45px; display: flex; align-items: center; gap: 35px; background: #fcfdfe; border-bottom: 3px solid var(--primary); }
-        .cv-photo-box { width: 160px; height: 160px; border-radius: 20px; overflow: hidden; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .cv-header { padding: 40px; display: flex; align-items: center; gap: 30px; background: #f1f5f9; border-bottom: 4px solid var(--primary); }
+        .photo-frame { width: 150px; height: 150px; border-radius: 15px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
-        .cv-body { display: grid; grid-template-columns: 280px 1fr; flex: 1; }
-        .cv-side { background: #f8fafc; padding: 40px 25px; border-left: 1px solid #f1f5f9; }
-        .cv-main { padding: 40px 45px; }
+        .cv-content { display: grid; grid-template-columns: 260px 1fr; flex: 1; }
+        .sidebar { background: #f8fafc; padding: 30px 20px; border-left: 1px solid #e2e8f0; }
+        .main-bar { padding: 30px 40px; }
 
-        .sec-title-pdf { 
-            font-size: 18px; font-weight: 900; color: var(--text-dark); 
-            margin: 20px 0 15px; display: flex; align-items: center; gap: 10px;
+        .pdf-title { 
+            font-size: 17px; font-weight: 900; color: #0f172a; 
+            margin: 20px 0 10px; display: flex; align-items: center; gap: 8px;
+            border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;
         }
-        .sec-title-pdf i { color: var(--primary); width: 25px; text-align: center; }
+        .pdf-title i { color: var(--primary); }
 
-        .contact-pdf { font-size: 13px; color: #475569; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .contact-pdf i { color: var(--primary); font-size: 14px; }
-
-        .badge-pdf { background: #eef2ff; color: var(--primary); padding: 5px 12px; border-radius: 8px; font-size: 12px; margin: 3px; display: inline-block; font-weight: 700; border: 1px solid #c7d2fe; }
+        .item-list { background: #eef2ff; color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 12px; margin: 2px; display: inline-block; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">CV<span>Forge</span>.ai</div>
+        <div class="logo">CVForge</div>
     </nav>
 
-    <div class="main-content">
-        <div class="header-tag">
-            <h2><i class="fas fa-magic"></i> اصنع مستقبلك الآن</h2>
+    <div class="app-container">
+        <div class="header-msg">
+            <h1>أهلاً بك في مصنع السير الذاتية</h1>
+            <p>صمم وثيقتك الاحترافية بدون أي أخطاء</p>
         </div>
 
-        <div class="glass-card">
-            <div class="input-group">
+        <div class="dark-card">
+            <div class="field">
                 <label><i class="fas fa-user"></i> الاسم بالكامل</label>
-                <input type="text" id="inName" placeholder="مثال: محمد أحمد علي">
+                <input type="text" id="inName" placeholder="محمد حسن علي">
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-camera"></i> الصورة الشخصية</label>
+            <div class="field">
+                <label><i class="fas fa-camera-retro"></i> صورتك الشخصية</label>
                 <input type="file" id="inPhoto" accept="image/*">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="input-group">
-                    <label><i class="fas fa-briefcase"></i> المسمى الوظيفي</label>
-                    <input type="text" id="inJob" placeholder="مدير مبيعات">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="field">
+                    <label><i class="fas fa-id-badge"></i> المسمى الوظيفي</label>
+                    <input type="text" id="inJob" placeholder="مدير فني">
                 </div>
-                <div class="input-group">
-                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                <div class="field">
+                    <label><i class="fas fa-phone-alt"></i> الهاتف</label>
                     <input type="tel" id="inPhone" placeholder="01XXXXXXXXX">
                 </div>
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
-                <input type="email" id="inEmail" placeholder="name@example.com">
+            <div class="field">
+                <label><i class="fas fa-at"></i> البريد الإلكتروني</label>
+                <input type="email" id="inEmail" placeholder="contact@cvforge.com">
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-id-card"></i> الملف الشخصي</label>
-                <textarea id="inAbout" rows="3" placeholder="نبذة مختصرة عن مسارك المهني..."></textarea>
+            <div class="field">
+                <label><i class="fas fa-align-right"></i> نبذة عنك</label>
+                <textarea id="inAbout" rows="3"></textarea>
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-history"></i> الخبرة العملية</label>
-                <textarea id="inExp" rows="4" placeholder="الشركات والمهام السابقة..."></textarea>
+            <div class="field">
+                <label><i class="fas fa-briefcase"></i> خبراتك العملية</label>
+                <textarea id="inExp" rows="4"></textarea>
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-graduation-cap"></i> التعليم</label>
-                <input type="text" id="inEdu" placeholder="المؤهل الدراسي والجامعة">
+            <div class="field">
+                <label><i class="fas fa-university"></i> التعليم</label>
+                <input type="text" id="inEdu">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="input-group">
-                    <label><i class="fas fa-star"></i> المهارات (,) </label>
-                    <input type="text" id="inSkills" placeholder="قيادة, إكسل">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="field">
+                    <label><i class="fas fa-award"></i> مهاراتك (,) </label>
+                    <input type="text" id="inSkills">
                 </div>
-                <div class="input-group">
-                    <label><i class="fas fa-globe"></i> اللغات (,) </label>
-                    <input type="text" id="inLangs" placeholder="العربية, الإنجليزية">
+                <div class="field">
+                    <label><i class="fas fa-language"></i> اللغات (,) </label>
+                    <input type="text" id="inLangs">
                 </div>
             </div>
 
-            <button class="btn-generate" onclick="generatePDF()">
-                <i class="fas fa-file-pdf"></i> تحميل السيرة الذاتية PDF
+            <button class="btn-action" onclick="makePDF()">
+                <i class="fas fa-rocket"></i> تحميل الـ PDF الآن
             </button>
         </div>
     </div>
 
     <div id="cv-render-area">
         <div id="cv-final" class="cv-paper">
-            <header class="cv-head">
-                <div class="cv-photo-box"><img id="resPhoto" src="" style="width:100%; height:100%; object-fit:cover;"></div>
+            <header class="cv-header">
+                <div class="photo-frame"><img id="resPhoto" src="" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div>
-                    <h1 id="resName" style="font-size: 45px; margin: 0; color: #1e293b; font-weight: 900; letter-spacing: 0;">الاسم</h1>
-                    <h2 id="resJob" style="color: #6366f1; font-weight: 600; margin: 5px 0;">المسمى الوظيفي</h2>
-                    <div class="contact-pdf"><i class="fas fa-phone"></i> <span id="resPhone"></span></div>
-                    <div class="contact-pdf"><i class="fas fa-envelope"></i> <span id="resEmail"></span></div>
+                    <h1 id="resName" style="font-size: 40px; margin: 0; font-weight: 900;">الاسم</h1>
+                    <h2 id="resJob" style="color: var(--primary); font-weight: 700; margin: 5px 0; font-size: 22px;">الوظيفة</h2>
+                    <div style="font-size: 14px; color: #475569;"><i class="fas fa-phone"></i> <span id="resPhone"></span> | <i class="fas fa-envelope"></i> <span id="resEmail"></span></div>
                 </div>
             </header>
             
-            <div class="cv-body">
-                <div class="cv-side">
-                    <div class="sec-title-pdf"><i class="fas fa-tools"></i> المهارات</div>
+            <div class="cv-content">
+                <div class="sidebar">
+                    <div class="pdf-title"><i class="fas fa-cog"></i> المهارات</div>
                     <div id="resSkills"></div>
                     
-                    <div class="sec-title-pdf"><i class="fas fa-language"></i> اللغات</div>
+                    <div class="pdf-title"><i class="fas fa-globe"></i> اللغات</div>
                     <div id="resLangs"></div>
                 </div>
-                
-                <div class="cv-main">
-                    <div class="sec-title-pdf"><i class="fas fa-user-circle"></i> الملف الشخصي</div>
-                    <div id="resAbout" style="font-size: 15px; line-height: 1.7; white-space: pre-line; color: #334155;"></div>
+                <div class="main-bar">
+                    <div class="pdf-title"><i class="fas fa-user"></i> الملف الشخصي</div>
+                    <div id="resAbout" style="font-size: 14px; line-height: 1.6; white-space: pre-line;"></div>
                     
-                    <div class="sec-title-pdf"><i class="fas fa-briefcase"></i> الخبرة العملية</div>
-                    <div id="resExp" style="font-size: 15px; line-height: 1.7; white-space: pre-line; color: #334155;"></div>
+                    <div class="pdf-title"><i class="fas fa-briefcase"></i> الخبرة العمليات</div>
+                    <div id="resExp" style="font-size: 14px; line-height: 1.6; white-space: pre-line;"></div>
                     
-                    <div class="sec-title-pdf"><i class="fas fa-graduation-cap"></i> التعليم</div>
-                    <div id="resEdu" style="font-size: 15px; color: #334155;"></div>
+                    <div class="pdf-title"><i class="fas fa-graduation-cap"></i> التعليم</div>
+                    <div id="resEdu" style="font-size: 14px;"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Image Processing
         document.getElementById('inPhoto').onchange = e => {
-            const reader = new FileReader();
-            reader.onload = () => document.getElementById('resPhoto').src = reader.result;
-            reader.readAsDataURL(e.target.files[0]);
+            const r = new FileReader();
+            r.onload = () => document.getElementById('resPhoto').src = r.result;
+            r.readAsDataURL(e.target.files[0]);
         };
 
-        async function generatePDF() {
-            const nameValue = document.getElementById('inName').value || "Professional Name";
-            
-            // Sync Data
-            document.getElementById('resName').innerText = nameValue;
-            document.getElementById('resJob').innerText = document.getElementById('inJob').value || "Position";
-            document.getElementById('resPhone').innerText = document.getElementById('inPhone').value || "000";
-            document.getElementById('resEmail').innerText = document.getElementById('inEmail').value || "mail@mail.com";
+        async function makePDF() {
+            const n = document.getElementById('inName').value || "Professional Name";
+            document.getElementById('resName').innerText = n;
+            document.getElementById('resJob').innerText = document.getElementById('inJob').value;
+            document.getElementById('resPhone').innerText = document.getElementById('inPhone').value;
+            document.getElementById('resEmail').innerText = document.getElementById('inEmail').value;
             document.getElementById('resAbout').innerText = document.getElementById('inAbout').value;
             document.getElementById('resExp').innerText = document.getElementById('inExp').value;
             document.getElementById('resEdu').innerText = document.getElementById('inEdu').value;
 
-            const updateBadges = (inId, outId) => {
-                const box = document.getElementById(outId);
+            const sync = (i, o) => {
+                const box = document.getElementById(o);
                 box.innerHTML = "";
-                document.getElementById(inId).value.split(',').forEach(s => {
-                    if(s.trim()) box.innerHTML += `<span class="badge-pdf">${s.trim()}</span>`;
+                document.getElementById(i).value.split(',').forEach(v => {
+                    if(v.trim()) box.innerHTML += `<span class="item-list">${v.trim()}</span>`;
                 });
             };
-            updateBadges('inSkills', 'resSkills');
-            updateBadges('inLangs', 'resLangs');
+            sync('inSkills', 'resSkills');
+            sync('inLangs', 'resLangs');
 
-            // Generate
-            const { jsPDF } = window.jspdf;
-            const element = document.getElementById('cv-final');
-            
-            const canvas = await html2canvas(element, { 
-                scale: 3, 
-                letterRendering: false,
-                useCORS: true 
-            });
-
-            const pdf = new jsPDF('p', 'mm', 'a4');
+            const canvas = await html2canvas(document.getElementById('cv-final'), { scale: 3 });
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-            pdf.save(`${nameValue.replace(/\s+/g, '_')}_CV.pdf`);
+            pdf.save(`${n}.pdf`);
         }
     </script>
 </body>
