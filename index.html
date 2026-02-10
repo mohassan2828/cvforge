@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CVForge AI | Full Edition</title>
+    <title>CVForge AI | النسخة الذكية الكاملة</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Inter:wght@400;700;900&family=Almarai:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -16,10 +16,12 @@
             --primary: #6366f1;
             --secondary: #0ea5e9;
             --bg-site: #f8fafc;
+            --ai-color: #db2777;
         }
 
         body { margin: 0; background: var(--bg-site); transition: 0.4s; overflow-x: hidden; font-family: 'Cairo', sans-serif; }
 
+        /* Bubbles Background */
         .bubbles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         .bubble { position: absolute; bottom: -100px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; opacity: 0.08; animation: rise 15s infinite ease-in; }
         @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-120vh) scale(1.5); opacity: 0; } }
@@ -32,7 +34,7 @@
         .brand-logo i { color: var(--primary); }
         .brand-logo span { background: linear-gradient(to left, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .app-container { width: 100%; max-width: 600px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; }
+        .app-container { width: 100%; max-width: 650px; margin: 20px auto; padding: 0 15px; box-sizing: border-box; padding-bottom: 50px; }
         .card-editor { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
         .culture-box { background: #f0f7ff; padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px dashed var(--primary); }
@@ -41,11 +43,22 @@
         .c-btn.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: 900; }
 
         .input-box { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 700; color: #475569; }
-        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; font-family: inherit; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        label { font-size: 13px; font-weight: 700; color: #475569; }
+        
+        /* AI Button Style */
+        .ai-gen-btn { 
+            background: #fdf2f8; color: var(--ai-color); border: 1px solid #fbcfe8; 
+            padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; 
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; 
+        }
+        .ai-gen-btn:hover:not(:disabled) { background: var(--ai-color); color: white; transform: translateY(-2px); }
+        .ai-gen-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .btn-create { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 15px; color: white; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
+        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; font-family: inherit; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+
+        .btn-create { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 15px; color: white; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); margin-top: 20px; }
 
         /* --- PDF Design --- */
         #pdf-hideout { position: absolute; left: -9999px; top: 0; }
@@ -70,8 +83,8 @@
         .s-title { font-size: 18px; font-weight: 900; color: var(--secondary); margin: 20px 0 10px; border-right: 4px solid var(--secondary); padding-right: 10px; }
         [dir="ltr"] .s-title { border-right: none; border-left: 4px solid var(--secondary); padding-left: 10px; }
         .s-content { font-size: 13px; line-height: 1.8; color: #cbd5e1; margin-bottom: 15px; }
-        .contact-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-        .contact-item i { color: var(--secondary); margin-top: 4px; width: 14px; text-align: center; }
+        .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+        .contact-item i { color: var(--secondary); margin-top: 4px; width: 16px; text-align: center; }
     </style>
 </head>
 <body dir="rtl">
@@ -79,26 +92,27 @@
     <div class="bubbles-container">
         <div class="bubble" style="width: 80px; height: 80px; left: 10%;"></div>
         <div class="bubble" style="width: 120px; height: 120px; left: 85%; animation-delay: 3s;"></div>
+        <div class="bubble" style="width: 60px; height: 60px; left: 45%; animation-delay: 6s;"></div>
     </div>
 
     <header>
-        <div class="brand-logo"><i class="fas fa-file-invoice"></i><span>CVForge AI</span></div>
+        <div class="brand-logo"><i class="fas fa-robot"></i><span>CVForge AI Smart</span></div>
     </header>
 
     <div class="app-container">
         <div class="card-editor">
             
             <div class="culture-box">
-                <label>🗺️ ثقافة القالب المستهدفة:</label>
+                <label>🗺️ اختيار القالب واللغة:</label>
                 <div class="culture-grid">
                     <button class="c-btn active" id="c-ar" onclick="setCulture('ar')">عربي / خليجي</button>
                     <button class="c-btn" id="c-us" onclick="setCulture('us')">أمريكي (ATS)</button>
-                    <button class="c-btn" id="c-eu" onclick="setCulture('eu')">أوروبي (UK)</button>
+                    <button class="c-btn" id="c-eu" onclick="setCulture('eu')">أوروبي (Modern)</button>
                 </div>
             </div>
 
-            <div class="input-box"><label>الاسم الكامل</label><input type="text" id="inName" placeholder="أحمد محمد"></div>
-            <div class="input-box"><label>المسمى الوظيفي</label><input type="text" id="inJob" placeholder="مهندس برمجيات"></div>
+            <div class="input-box"><label>الاسم الكامل</label><input type="text" id="inName" placeholder="مثال: أحمد محمد"></div>
+            <div class="input-box"><label>المسمى الوظيفي (أساسي للذكاء الاصطناعي)</label><input type="text" id="inJob" placeholder="مثال: محاسب، مبرمج، مدير مبيعات"></div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div class="input-box"><label>تاريخ الميلاد</label><input type="date" id="inBirth"></div>
@@ -112,8 +126,22 @@
 
             <div class="input-box"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
 
-            <div class="input-box"><label id="l-about">النبذة الشخصية</label><textarea id="inAbout" rows="3"></textarea></div>
-            <div class="input-box"><label id="l-exp">الخبرات المهنية</label><textarea id="inExp" rows="4"></textarea></div>
+            <div class="input-box">
+                <div class="label-row">
+                    <label id="l-about">النبذة الشخصية</label>
+                    <button onclick="generateAIContent('about')" class="ai-gen-btn"><i class="fas fa-sparkles"></i> توليد بالـ AI</button>
+                </div>
+                <textarea id="inAbout" rows="3" placeholder="اكتب مسمى وظيفتك واضغط 'توليد' لمساعدتك..."></textarea>
+            </div>
+
+            <div class="input-box">
+                <div class="label-row">
+                    <label id="l-exp">الخبرات المهنية</label>
+                    <button onclick="generateAIContent('exp')" class="ai-gen-btn"><i class="fas fa-magic"></i> اقتراح إنجازات</button>
+                </div>
+                <textarea id="inExp" rows="4" placeholder="سيقوم الذكاء الاصطناعي بكتابة مهام احترافية لك..."></textarea>
+            </div>
+
             <div class="input-box"><label id="l-awards">الإنجازات والمشاريع</label><textarea id="inAwards" rows="3"></textarea></div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -121,10 +149,10 @@
                 <div class="input-box"><label>اللغات</label><textarea id="inLang" rows="3"></textarea></div>
             </div>
             
-            <div class="input-box"><label>المهارات الرئيسية</label><input type="text" id="inSkills" placeholder="برمجة، قيادة، تصميم"></div>
+            <div class="input-box"><label>المهارات الرئيسية</label><input type="text" id="inSkills" placeholder="مثال: Excel, Teamwork, Photoshop"></div>
 
             <button class="btn-create" onclick="generateCV()">
-                <i class="fas fa-download"></i> حفظ بصيغة PDF الاحترافية
+                <i class="fas fa-cloud-download-alt"></i> تحميل السيرة الذاتية (PDF)
             </button>
         </div>
     </div>
@@ -135,8 +163,7 @@
                 <img id="outPhoto" class="cv-photo" src="">
                 
                 <div class="s-title" id="side-contact">التواصل</div>
-                <div id="outContact" class="s-content">
-                    </div>
+                <div id="outContact" class="s-content"></div>
 
                 <div class="s-title" id="side-edu">التعليم</div>
                 <div id="outEdu" class="s-content"></div>
@@ -155,17 +182,17 @@
                 </div>
                 
                 <div class="cv-section">
-                    <div class="cv-title"><i class="fas fa-user"></i> <span id="out-l-about">النبذة الشخصية</span></div>
+                    <div class="cv-title"><i class="fas fa-id-card"></i> <span id="out-l-about">النبذة الشخصية</span></div>
                     <div id="outAbout" class="cv-text"></div>
                 </div>
 
                 <div class="cv-section">
-                    <div class="cv-title"><i class="fas fa-star"></i> <span id="out-l-awards">الإنجازات والمشاريع</span></div>
+                    <div class="cv-title"><i class="fas fa-trophy"></i> <span id="out-l-awards">الإنجازات</span></div>
                     <div id="outAwards" class="cv-text"></div>
                 </div>
 
                 <div class="cv-section">
-                    <div class="cv-title"><i class="fas fa-briefcase"></i> <span id="out-l-exp">المسيرة المهنية</span></div>
+                    <div class="cv-title"><i class="fas fa-business-time"></i> <span id="out-l-exp">المسيرة المهنية</span></div>
                     <div id="outExp" class="cv-text"></div>
                 </div>
             </div>
@@ -173,31 +200,66 @@
     </div>
 
     <script>
-        let currentCulture = 'ar';
+        // دمج مفتاح الـ API الخاص بك
+        const GEMINI_API_KEY = "AIzaSyBowgZXd1c24OQKFoVkqJYvs3BjEKgV8mc";
 
+        let currentCulture = 'ar';
         const cultures = {
             ar: { dir: 'rtl', about: 'النبذة الشخصية', exp: 'الخبرات المهنية', awards: 'الإنجازات والمشاريع', contact: 'التواصل', edu: 'التعليم', lang: 'اللغات', skills: 'المهارات' },
-            us: { dir: 'ltr', about: 'Professional Summary', exp: 'Work History', awards: 'Key Milestones', contact: 'Contact Details', edu: 'Education', lang: 'Languages', skills: 'Expertise' },
-            eu: { dir: 'ltr', about: 'Profile', exp: 'Professional Experience', awards: 'Projects', contact: 'Information', edu: 'Academic History', lang: 'Language Proficiency', skills: 'Core Skills' }
+            us: { dir: 'ltr', about: 'Professional Summary', exp: 'Work Experience', awards: 'Key Achievements', contact: 'Contact', edu: 'Education', lang: 'Languages', skills: 'Skills' },
+            eu: { dir: 'ltr', about: 'Profile', exp: 'Career History', awards: 'Projects', contact: 'Information', edu: 'Education', lang: 'Languages', skills: 'Expertise' }
         };
 
         function setCulture(type) {
             currentCulture = type;
             document.querySelectorAll('.c-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`c-${type}`).classList.add('active');
-            
             const c = cultures[type];
             document.getElementById('mainHtml').dir = c.dir;
             document.getElementById('final-document').dir = c.dir;
-            
-            // تحديث العناوين
-            const labels = ['about', 'exp', 'awards', 'contact', 'edu', 'lang', 'skills'];
-            labels.forEach(id => {
+            ['about', 'exp', 'awards', 'contact', 'edu', 'lang', 'skills'].forEach(id => {
                 const el = document.getElementById(`out-l-${id}`) || document.getElementById(`side-${id}`);
                 if(el) el.innerText = c[id];
                 const inputLabel = document.getElementById(`l-${id}`);
                 if(inputLabel) inputLabel.innerText = c[id];
             });
+        }
+
+        // محرك الذكاء الاصطناعي الحقيقي
+        async function generateAIContent(type) {
+            const jobTitle = document.getElementById('inJob').value;
+            const btn = event.currentTarget;
+            const targetId = type === 'about' ? 'inAbout' : 'inExp';
+            
+            if (!jobTitle) {
+                alert(currentCulture === 'ar' ? "يرجى كتابة المسمى الوظيفي أولاً!" : "Please enter your job title first!");
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التفكير...';
+            btn.disabled = true;
+
+            const prompt = type === 'about' 
+                ? `اكتب نبذة شخصية احترافية ومختصرة لسيرة ذاتية لشخص يعمل كـ ${jobTitle}. باللغة ${currentCulture === 'ar' ? 'العربية' : 'الإنجليزية'}.`
+                : `اكتب 3 نقاط قوة مهنية بصيغة إنجازات مهبهرة لشخص يعمل كـ ${jobTitle}. باللغة ${currentCulture === 'ar' ? 'العربية' : 'الإنجليزية'}.`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+
+                const data = await response.json();
+                const aiResult = data.candidates[0].content.parts[0].text;
+                document.getElementById(targetId).value = aiResult.trim();
+            } catch (error) {
+                alert("خطأ في الاتصال بالذكاء الاصطناعي. تأكد من الإنترنت.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
         document.getElementById('inPhoto').onchange = e => {
@@ -207,25 +269,22 @@
         };
 
         async function generateCV() {
-            // بيانات الرأس
             document.getElementById('outName').innerText = document.getElementById('inName').value || "Full Name";
             document.getElementById('outJob').innerText = document.getElementById('inJob').value || "Professional Title";
             
-            // بيانات التواصل (بما فيها العنوان وتاريخ الميلاد)
-            const phone = document.getElementById('inPhone').value;
-            const email = document.getElementById('inEmail').value;
-            const birth = document.getElementById('inBirth').value;
-            const address = document.getElementById('inAddress').value;
-
             let contactHtml = '';
-            if(phone) contactHtml += `<div class="contact-item"><i class="fas fa-phone"></i><span>${phone}</span></div>`;
-            if(email) contactHtml += `<div class="contact-item"><i class="fas fa-envelope"></i><span>${email}</span></div>`;
-            if(address) contactHtml += `<div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>${address}</span></div>`;
-            if(birth) contactHtml += `<div class="contact-item"><i class="fas fa-calendar-alt"></i><span>${birth}</span></div>`;
-            
+            const fields = [
+                { id: 'inPhone', icon: 'fa-phone' },
+                { id: 'inEmail', icon: 'fa-envelope' },
+                { id: 'inAddress', icon: 'fa-map-marker-alt' },
+                { id: 'inBirth', icon: 'fa-calendar-alt' }
+            ];
+            fields.forEach(f => {
+                const val = document.getElementById(f.id).value;
+                if(val) contactHtml += `<div class="contact-item"><i class="fas ${f.icon}"></i><span>${val}</span></div>`;
+            });
             document.getElementById('outContact').innerHTML = contactHtml;
 
-            // باقي البيانات
             document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
             document.getElementById('outExp').innerText = document.getElementById('inExp').value;
             document.getElementById('outEdu').innerText = document.getElementById('inEdu').value;
@@ -233,12 +292,11 @@
             document.getElementById('outAwards').innerText = document.getElementById('inAwards').value;
             document.getElementById('outSkills').innerText = document.getElementById('inSkills').value;
 
-            // توليد الـ PDF
             const element = document.getElementById('final-document');
             const canvas = await html2canvas(element, { scale: 3, useCORS: true });
             const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-            pdf.save(`CVForge_AI_${currentCulture}.pdf`);
+            pdf.save(`CVForge_AI_${Date.now()}.pdf`);
         }
     </script>
 </body>
