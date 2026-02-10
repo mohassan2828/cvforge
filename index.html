@@ -2,198 +2,161 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cv Forge</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --bg: #f8fafc; --accent: #ffd700; }
+        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --text-main: #1e293b; --bg-light: #f8fafc; }
         
-        body { margin: 0; background: var(--bg); font-family: 'Cairo', sans-serif; overflow-x: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: #f1f5f9; font-family: 'Cairo', sans-serif; color: var(--text-main); line-height: 1.6; }
 
-        /* الهيدر الأنيق مع الجملة المتحركة */
-        header { 
-            background: #fff; padding: 40px 20px; text-align: center; border-bottom: 5px solid var(--primary);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative;
-        }
-        .main-title { font-family: 'Almarai'; font-size: 42px; font-weight: 900; color: var(--primary); margin: 0; letter-spacing: -1px; }
+        /* الهيدر الأنيق والجملة المتحركة */
+        header { background: #fff; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .main-title { font-family: 'Almarai'; font-size: 38px; font-weight: 800; color: var(--primary); margin: 0; }
+        .typing-box { height: 24px; margin-top: 10px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+
+        .app-container { max-width: 650px; margin: 20px auto; padding: 0 15px; padding-bottom: 80px; }
+        .editor-card { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
         
-        /* تأثير الكتابة */
-        .typing-container { height: 25px; margin-top: 10px; font-weight: 600; color: var(--secondary); font-size: 16px; }
-        .typing-text::after { content: "|"; animation: blink 0.7s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .input-group { margin-bottom: 18px; }
+        label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 13px; color: #475569; }
+        input, textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; transition: 0.3s; background: #fcfdfe; border: 2px solid #f1f5f9; }
+        input:focus, textarea:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(26,95,122,0.05); }
 
-        .app-container { max-width: 650px; margin: 30px auto; padding: 0 20px; padding-bottom: 100px; }
-        .editor-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); }
-        
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 800; margin-bottom: 8px; color: #334155; font-size: 14px; }
-        input, textarea { 
-            width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; 
-            font-family: inherit; outline: none; box-sizing: border-box; transition: 0.4s; background: #fcfdfe;
-        }
-        input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(26, 95, 122, 0.1); }
+        .btn-main { width: 100%; padding: 20px; background: var(--primary); color: white; border: none; border-radius: 15px; font-size: 17px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .btn-main:hover { transform: translateY(-2px); opacity: 0.95; }
+        .btn-clear { background: none; color: #94a3b8; border: none; width: 100%; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 14px; }
 
-        .theme-panel { display: flex; justify-content: center; gap: 15px; margin: 25px 0; }
-        .dot { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
-        .dot:hover { transform: scale(1.2); }
-
-        .btn-download { 
-            width: 100%; padding: 22px; background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 900; 
-            cursor: pointer; transition: 0.4s; box-shadow: 0 10px 25px rgba(26, 95, 122, 0.3);
-        }
-        .btn-download:active { transform: scale(0.98); }
-
-        .btn-clear { background: none; color: #94a3b8; border: none; margin-top: 20px; width: 100%; cursor: pointer; font-weight: 600; text-decoration: underline; }
-
-        /* --- نظام الإشعارات المبهـر --- */
-        #custom-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px);
-        }
-        .modal-content { 
-            background: white; padding: 40px; border-radius: 30px; text-align: center; max-width: 400px; width: 90%;
-            transform: translateY(20px); animation: modalIn 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalIn { to { transform: translateY(0); opacity: 1; } }
-        .loader-circle { width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .success-icon { font-size: 60px; color: #22c55e; margin-bottom: 20px; }
-
-        /* --- تصميم الـ PDF (مثل صورة محمد مراد) --- */
+        /* --- تصميم الـ PDF (المطابق لـ محمد مراد) --- */
         #pdf-hideout { position: absolute; left: -9999px; top: 0; }
-        .cv-document { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; overflow: hidden; }
+        .cv-document { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; text-rendering: optimizeLegibility; }
         
-        .cv-header { background: var(--primary); padding: 50px 60px; color: white; display: flex; align-items: center; justify-content: space-between; position: relative; }
-        .header-info h1 { font-family: 'Almarai'; font-size: 52px; margin: 0; font-weight: 800; letter-spacing: -1px; }
-        .header-info p { font-size: 24px; margin: 8px 0 0; opacity: 0.95; font-weight: 400; display: inline-block; width: 100%; }
+        .cv-header { background: var(--primary); padding: 50px 60px; color: white; display: flex; align-items: center; justify-content: space-between; height: 220px; }
+        .header-text h1 { font-family: 'Almarai'; font-size: 50px; margin: 0; font-weight: 800; }
+        .header-text p { font-size: 22px; margin: 5px 0 0; opacity: 0.9; }
+        .photo-frame { width: 170px; height: 170px; border-radius: 50%; border: 6px solid #fff; overflow: hidden; background: #fff; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        .cv-body { display: grid; grid-template-columns: 1.6fr 1fr; flex: 1; }
+        .main-col { padding: 40px 50px 40px 20px; }
+        .side-col { background: #f8fafc; padding: 40px 35px; border-right: 1px solid #e2e8f0; }
+
+        .section-h { color: #000; font-size: 20px; font-weight: 900; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        .section-h::after { content: ""; flex: 1; height: 2px; background: #e2e8f0; }
         
-        .photo-circle { width: 170px; height: 170px; border-radius: 50%; border: 8px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .entry-item { margin-bottom: 25px; padding-right: 20px; border-right: 3px solid var(--primary); position: relative; }
+        .entry-title { font-weight: 800; font-size: 16px; color: var(--primary); margin-bottom: 5px; }
+        .entry-desc { font-size: 15px; color: #334155; white-space: pre-line; text-align: justify; }
 
-        .cv-body { display: grid; grid-template-columns: 1.6fr 1fr; flex-grow: 1; }
-        .right-col { padding: 50px 60px 50px 30px; }
-        .left-col { background: #fcfdfe; padding: 50px 40px; border-right: 1px solid #f1f5f9; }
+        .side-title { background: var(--primary); color: white; padding: 10px; border-radius: 12px; font-weight: 800; margin-bottom: 20px; text-align: center; }
+        .contact-box { font-size: 14px; margin-bottom: 30px; }
+        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #475569; }
+        .contact-item i { color: var(--primary); width: 15px; }
 
-        .section-title { color: #1e293b; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-        .section-title i { color: var(--primary); }
+        .skill-tag { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 14px; }
+        .dots { display: flex; gap: 4px; }
+        .dot-i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; }
+        .dot-i.on { background: var(--primary); }
 
-        .cv-entry { margin-bottom: 30px; position: relative; padding-right: 25px; border-right: 3px solid var(--primary); }
-        .date-text { font-size: 14px; color: #64748b; font-weight: 700; margin-bottom: 5px; }
-        .content-text { font-size: 16px; color: #334155; line-height: 1.8; white-space: pre-line; text-align: justify; direction: rtl; }
-
-        .side-box { background: var(--primary); color: white; padding: 12px 25px; border-radius: 12px; font-size: 18px; font-weight: 800; margin-bottom: 25px; text-align: center; }
-        .contact-row { display: flex; align-items: center; gap: 15px; margin-bottom: 18px; font-size: 14px; color: #475569; }
-        .contact-row i { color: var(--primary); font-size: 16px; width: 20px; text-align: center; }
-
-        .skill-item { margin-bottom: 15px; font-weight: 700; color: #1e293b; font-size: 14px; }
-        .skill-dots { display: flex; gap: 5px; margin-top: 5px; }
-        .s-dot { width: 10px; height: 10px; border-radius: 50%; background: #e2e8f0; }
-        .s-dot.active { background: var(--primary); }
+        /* المودال */
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 999; align-items: center; justify-content: center; }
+        .modal-box { background: white; padding: 40px; border-radius: 25px; text-align: center; max-width: 350px; width: 90%; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <header>
         <h1 class="main-title">Cv Forge</h1>
-        <div class="typing-container"><span class="typing-text" id="typingText"></span></div>
+        <div class="typing-box" id="typing"></div>
     </header>
 
     <div class="app-container">
         <div class="editor-card">
-            <div class="input-group"><label>الاسم الكامل</label><input type="text" id="inName" oninput="save()"></div>
+            <div class="input-group"><label>الاسم بالكامل</label><input type="text" id="inName" oninput="save()"></div>
             <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="inJob" oninput="save()"></div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()" placeholder="1995-10-20"></div>
-                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()" placeholder="الإسكندرية، مصر"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()"></div>
+                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()"></div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="input-group"><label>الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="input-group"><label>رقم الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
                 <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="inEmail" oninput="save()"></div>
             </div>
 
             <div class="input-group"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
-            <div class="input-group"><label>النبذة المهنية</label><textarea id="inAbout" oninput="save()" rows="4"></textarea></div>
-            <div class="input-group"><label>الخبرات (السنة : الوصف)</label><textarea id="inExp" oninput="save()" rows="6" placeholder="2020-2024 : مبرمج في شركة..."></textarea></div>
+            <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="3"></textarea></div>
+            <div class="input-group"><label>الخبرات العملية (كل سطر خبرة منفصلة)</label><textarea id="inExp" oninput="save()" rows="5"></textarea></div>
             <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="3"></textarea></div>
             <div class="input-group"><label>المهارات (افصل بفاصلة)</label><input type="text" id="inSkills" oninput="save()"></div>
 
-            <div class="theme-panel">
-                <div class="dot" style="background: #1a5f7a;" onclick="setTheme('#1a5f7a')"></div>
-                <div class="dot" style="background: #1e293b;" onclick="setTheme('#1e293b')"></div>
-                <div class="dot" style="background: #6366f1;" onclick="setTheme('#6366f1')"></div>
-            </div>
-
-            <button class="btn-download" onclick="downloadPDF()">توليد الـ PDF الاحترافي</button>
-            <button class="btn-clear" onclick="clearData()">إعادة ضبط البيانات</button>
+            <button class="btn-main" onclick="generate()">تحميل بصيغة PDF عالية الدقة</button>
+            <button class="btn-clear" onclick="clearAll()">مسح كافة البيانات</button>
         </div>
     </div>
 
-    <div id="custom-modal">
-        <div class="modal-content" id="modalBody"></div>
-    </div>
+    <div id="modal"><div class="modal-box" id="modalContent"></div></div>
 
     <div id="pdf-hideout">
-        <div id="cv-page" class="cv-document">
+        <div id="cv-target" class="cv-document">
             <div class="cv-header">
-                <div class="header-info">
+                <div class="header-text">
                     <h1 id="outName"></h1>
-                    <p id="outJob" style="display: inline-block; white-space: nowrap;"></p>
+                    <p id="outJob"></p>
                 </div>
-                <div class="photo-circle"><img id="outPhoto" src=""></div>
+                <div class="photo-frame"><img id="outPhoto" src=""></div>
             </div>
             <div class="cv-body">
-                <div class="right-col">
-                    <div class="section-title"><i class="fas fa-history"></i> الخبرة العملية</div>
-                    <div id="expContainer"></div>
-                    <div class="section-title" style="margin-top:40px;"><i class="fas fa-university"></i> المسار التعليمي</div>
-                    <div id="eduContainer"></div>
+                <div class="main-col">
+                    <div class="section-h">الخبرات المهنية</div>
+                    <div id="expBox"></div>
+                    <div class="section-h" style="margin-top:30px;">التعليم</div>
+                    <div id="eduBox"></div>
                 </div>
-                <div class="left-col">
-                    <div class="side-box">التعريف الشخصي</div>
-                    <div id="outAbout" class="content-text" style="font-size: 14px; margin-bottom: 40px;"></div>
-                    <div class="side-box">معلومات التواصل</div>
-                    <div class="contact-row"><i class="fas fa-birthday-cake"></i> <span id="outBirth"></span></div>
-                    <div class="contact-row"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
-                    <div class="contact-row"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
-                    <div class="contact-row"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
-                    <div class="side-box" style="margin-top:40px;">المهارات</div>
-                    <div id="skillsContainer"></div>
+                <div class="side-col">
+                    <div class="side-title">الملف الشخصي</div>
+                    <div id="outAbout" style="font-size: 14px; margin-bottom: 35px; color: #475569;"></div>
+                    <div class="side-title">التواصل</div>
+                    <div class="contact-box">
+                        <div class="contact-item"><i class="fas fa-calendar"></i> <span id="outBirth"></span></div>
+                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
+                        <div class="contact-item"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
+                        <div class="contact-item"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
+                    </div>
+                    <div class="side-title">المهارات</div>
+                    <div id="skillBox"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const ids = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills'];
-        const phrases = ["أداتك الذكية لصناعة مستقبلك المهني.", "صمم سيرتك الذاتية بدقة عالمية.", "Cv Forge .. حيث تبدأ رحلة النجاح."];
-        let i = 0, j = 0, isDeleting = false;
+        const fields = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills'];
+        const phrases = ["صناعة سيرة ذاتية تبهر أصحاب العمل.", "دقة عالية وتصميم عالمي.", "Cv Forge .. طريقك نحو الوظيفة."];
+        let pIdx = 0, charIdx = 0, isDeleting = false;
 
-        function type() {
-            const current = phrases[i];
-            document.getElementById('typingText').innerHTML = isDeleting ? current.substring(0, j--) : current.substring(0, j++);
-            if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); }
-            else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % phrases.length; setTimeout(type, 500); }
-            else setTimeout(type, isDeleting ? 50 : 100);
+        function typeEffect() {
+            const current = phrases[pIdx];
+            document.getElementById('typing').innerText = isDeleting ? current.substring(0, charIdx--) : current.substring(0, charIdx++);
+            if (!isDeleting && charIdx === current.length + 1) { isDeleting = true; setTimeout(typeEffect, 1500); }
+            else if (isDeleting && charIdx === 0) { isDeleting = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(typeEffect, 500); }
+            else setTimeout(typeEffect, isDeleting ? 40 : 80);
         }
 
-        function save() { ids.forEach(id => localStorage.setItem(id, document.getElementById(id).value)); }
-        function load() { 
-            ids.forEach(id => { const val = localStorage.getItem(id); if(val) document.getElementById(id).value = val; });
-            const c = localStorage.getItem('theme'); if(c) setTheme(c);
-            type();
-        }
-
-        function setTheme(c) { document.documentElement.style.setProperty('--primary', c); localStorage.setItem('theme', c); }
-        function clearData() { if(confirm("مسح؟")) { localStorage.clear(); location.reload(); } }
+        function save() { fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value)); }
+        function load() { fields.forEach(f => { const val = localStorage.getItem(f); if(val) document.getElementById(f).value = val; }); typeEffect(); }
+        function clearAll() { if(confirm("تأكيد مسح البيانات؟")) { localStorage.clear(); location.reload(); } }
 
         document.getElementById('inPhoto').onchange = e => {
             const r = new FileReader();
@@ -201,44 +164,49 @@
             r.readAsDataURL(e.target.files[0]);
         };
 
-        function showModal(type, msg) {
-            const m = document.getElementById('custom-modal');
-            const b = document.getElementById('modalBody');
+        function showStatus(type, msg) {
+            const m = document.getElementById('modal');
+            const c = document.getElementById('modalContent');
             m.style.display = 'flex';
-            b.innerHTML = type === 'load' ? `<div class="loader-circle"></div><h3>${msg}</h3>` : `<div class="success-icon"><i class="fas fa-check-circle"></i></div><h3>${msg}</h3><button onclick="document.getElementById('custom-modal').style.display='none'" class="btn-download" style="padding:10px; margin-top:10px;">حسناً</button>`;
+            c.innerHTML = type === 'loading' ? `<div class="loader"></div><p>${msg}</p>` : `<i class="fas fa-check-circle" style="font-size:50px; color:#22c55e; margin-bottom:15px; display:block;"></i><h3>تمت المهمة!</h3><p>${msg}</p><button onclick="document.getElementById('modal').style.display='none'" class="btn-main" style="padding:10px; margin-top:15px;">رائع</button>`;
         }
 
-        async function downloadPDF() {
-            showModal('load', 'جاري معالجة البيانات وتنسيق الملف...');
+        async function generate() {
+            showStatus('loading', 'جاري تنسيق الحروف العربية وتحسين الدقة...');
             
+            // تعبئة البيانات
             document.getElementById('outName').innerText = document.getElementById('inName').value || "الاسم الكامل";
-            // حل مشكلة الحروف المتلخبطة: لف النص بـ span وضمان الـ direction
-            document.getElementById('outJob').innerHTML = `<span style="direction:rtl; unicode-bidi:embed;">${document.getElementById('inJob').value || "المسمى الوظيفي"}</span>`;
-            
+            document.getElementById('outJob').innerText = document.getElementById('inJob').value || "المسمى الوظيفي";
+            document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
             document.getElementById('outBirth').innerText = document.getElementById('inBirth').value;
             document.getElementById('outAddress').innerText = document.getElementById('inAddress').value;
             document.getElementById('outPhone').innerText = document.getElementById('inPhone').value;
             document.getElementById('outEmail').innerText = document.getElementById('inEmail').value;
-            document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
 
-            const skills = document.getElementById('inSkills').value.split(',');
-            document.getElementById('skillsContainer').innerHTML = skills.map(s => s.trim() ? `<div class="skill-item"><span>${s.trim()}</span><div class="skill-dots"><div class="s-dot active"></div><div class="s-dot active"></div><div class="s-dot active"></div><div class="s-dot"></div></div></div>` : '').join('');
+            // الخبرات - مع منع التكرار
+            const exps = document.getElementById('inExp').value.split('\n').filter(l => l.trim() !== "");
+            document.getElementById('expBox').innerHTML = exps.map(l => `<div class="entry-item"><div class="entry-desc">${l}</div></div>`).join('');
 
-            const exps = document.getElementById('inExp').value.split('\n');
-            document.getElementById('expContainer').innerHTML = exps.map(line => {
-                const [date, text] = line.split(':');
-                return line.trim() ? `<div class="cv-entry"><div class="date-text">${date||''}</div><div class="content-text">${text||line}</div></div>` : '';
-            }).join('');
+            // التعليم
+            const edus = document.getElementById('inEdu').value.split('\n').filter(l => l.trim() !== "");
+            document.getElementById('eduBox').innerHTML = edus.map(l => `<div class="entry-item"><div class="entry-desc">${l}</div></div>`).join('');
 
-            document.getElementById('eduContainer').innerHTML = `<div class="cv-entry"><div class="content-text">${document.getElementById('inEdu').value}</div></div>`;
+            // المهارات
+            const skills = document.getElementById('inSkills').value.split(',').filter(s => s.trim() !== "");
+            document.getElementById('skillBox').innerHTML = skills.map(s => `<div class="skill-tag"><span>${s.trim()}</span><div class="dots"><div class="dot-i on"></div><div class="dot-i on"></div><div class="dot-i on"></div><div class="dot-i"></div></div></div>`).join('');
 
             setTimeout(async () => {
-                const canvas = await html2canvas(document.getElementById('cv-page'), { scale: 3, useCORS: true, letterRendering: true });
+                const canvas = await html2canvas(document.getElementById('cv-target'), { 
+                    scale: 3, 
+                    useCORS: true,
+                    letterRendering: true, // يمنع تداخل الحروف العربية
+                    logging: false
+                });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
                 pdf.save(`CV_${document.getElementById('inName').value || 'Forge'}.pdf`);
-                showModal('success', 'تم استخراج سيرتك الذاتية بنجاح!');
-            }, 1500);
+                showStatus('success', 'تم استخراج سيرتك الذاتية بنجاح بنسبة دقة 100%');
+            }, 1200);
         }
 
         window.onload = load;
