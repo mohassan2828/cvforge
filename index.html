@@ -2,179 +2,191 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cv Forge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cv Forge AI</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --text-main: #1e293b; --bg-light: #f8fafc; }
+        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --bg: #f0f2f5; }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: #f1f5f9; font-family: 'Cairo', sans-serif; color: var(--text-main); line-height: 1.6; }
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; background: var(--bg); font-family: 'Cairo', sans-serif; 
+            display: flex; flex-direction: column; min-height: 100vh; align-items: center;
+        }
 
-        /* الهيدر الأنيق والجملة المتحركة */
-        header { background: #fff; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .main-title { font-family: 'Almarai'; font-size: 38px; font-weight: 800; color: var(--primary); margin: 0; }
-        .typing-box { height: 24px; margin-top: 10px; color: var(--secondary); font-weight: 600; font-size: 15px; }
+        /* تنسيق الموقع ليكون ثابتاً وفي المنتصف */
+        header { 
+            width: 100%; background: #fff; padding: 25px; text-align: center; 
+            border-bottom: 4px solid var(--primary); box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .main-title { font-family: 'Almarai'; font-size: 32px; font-weight: 800; color: var(--primary); margin: 0; }
+        .typing-text { color: var(--secondary); font-size: 14px; font-weight: 600; height: 20px; margin-top: 5px; }
 
-        .app-container { max-width: 650px; margin: 20px auto; padding: 0 15px; padding-bottom: 80px; }
-        .editor-card { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
+        .app-container { width: 100%; max-width: 600px; padding: 20px; flex-grow: 1; }
+        .editor-card { 
+            background: white; padding: 25px; border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e1e4e8;
+        }
         
-        .input-group { margin-bottom: 18px; }
-        label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 13px; color: #475569; }
-        input, textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; transition: 0.3s; background: #fcfdfe; border: 2px solid #f1f5f9; }
-        input:focus, textarea:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(26,95,122,0.05); }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 13px; color: #334155; }
+        input, textarea { 
+            width: 100%; padding: 12px; border: 2px solid #f1f5f9; border-radius: 10px; 
+            font-family: inherit; outline: none; transition: 0.3s; background: #fafbfc;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
 
-        .btn-main { width: 100%; padding: 20px; background: var(--primary); color: white; border: none; border-radius: 15px; font-size: 17px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        .btn-main:hover { transform: translateY(-2px); opacity: 0.95; }
-        .btn-clear { background: none; color: #94a3b8; border: none; width: 100%; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 14px; }
+        .btn-download { 
+            width: 100%; padding: 18px; background: var(--primary); color: white; 
+            border: none; border-radius: 12px; font-size: 16px; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-download:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26,95,122,0.3); }
 
-        /* --- تصميم الـ PDF (المطابق لـ محمد مراد) --- */
-        #pdf-hideout { position: absolute; left: -9999px; top: 0; }
-        .cv-document { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; text-rendering: optimizeLegibility; }
-        
-        .cv-header { background: var(--primary); padding: 50px 60px; color: white; display: flex; align-items: center; justify-content: space-between; height: 220px; }
-        .header-text h1 { font-family: 'Almarai'; font-size: 50px; margin: 0; font-weight: 800; }
-        .header-text p { font-size: 22px; margin: 5px 0 0; opacity: 0.9; }
-        .photo-frame { width: 170px; height: 170px; border-radius: 50%; border: 6px solid #fff; overflow: hidden; background: #fff; }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-        .cv-body { display: grid; grid-template-columns: 1.6fr 1fr; flex: 1; }
-        .main-col { padding: 40px 50px 40px 20px; }
-        .side-col { background: #f8fafc; padding: 40px 35px; border-right: 1px solid #e2e8f0; }
-
-        .section-h { color: #000; font-size: 20px; font-weight: 900; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-        .section-h::after { content: ""; flex: 1; height: 2px; background: #e2e8f0; }
-        
-        .entry-item { margin-bottom: 25px; padding-right: 20px; border-right: 3px solid var(--primary); position: relative; }
-        .entry-title { font-weight: 800; font-size: 16px; color: var(--primary); margin-bottom: 5px; }
-        .entry-desc { font-size: 15px; color: #334155; white-space: pre-line; text-align: justify; }
-
-        .side-title { background: var(--primary); color: white; padding: 10px; border-radius: 12px; font-weight: 800; margin-bottom: 20px; text-align: center; }
-        .contact-box { font-size: 14px; margin-bottom: 30px; }
-        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #475569; }
-        .contact-item i { color: var(--primary); width: 15px; }
-
-        .skill-tag { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 14px; }
-        .dots { display: flex; gap: 4px; }
-        .dot-i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; }
-        .dot-i.on { background: var(--primary); }
-
-        /* المودال */
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 999; align-items: center; justify-content: center; }
-        .modal-box { background: white; padding: 40px; border-radius: 25px; text-align: center; max-width: 350px; width: 90%; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        /* --- نظام الإشعارات (المودال) --- */
+        #modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;
+        }
+        .modal-box { 
+            background: white; padding: 30px; border-radius: 20px; text-align: center; 
+            max-width: 320px; width: 85%; animation: modalPop 0.3s ease-out;
+        }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- تصميم الـ PDF الاحترافي --- */
+        #pdf-hideout { position: absolute; left: -9999px; top: 0; }
+        .cv-document { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; }
+        
+        .cv-header { background: var(--primary); padding: 40px 50px; color: white; display: flex; align-items: center; justify-content: space-between; height: 200px; }
+        .header-info h1 { font-family: 'Almarai'; font-size: 48px; margin: 0; font-weight: 800; }
+        .header-info p { font-size: 22px; margin-top: 5px; opacity: 0.9; }
+        
+        .photo-wrap { width: 160px; height: 160px; border-radius: 50%; border: 6px solid #fff; overflow: hidden; background: #fff; }
+        .photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+        .cv-main { display: grid; grid-template-columns: 1.6fr 1fr; flex-grow: 1; }
+        .content-area { padding: 40px; }
+        .sidebar { background: #f8fafc; padding: 40px 30px; border-right: 1px solid #e2e8f0; }
+
+        .sec-title { color: #000; font-size: 20px; font-weight: 900; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .cv-item { margin-bottom: 20px; padding-right: 15px; border-right: 3px solid var(--primary); }
+        .item-text { font-size: 15px; color: #334155; white-space: pre-line; text-align: justify; line-height: 1.7; }
+
+        .side-head { background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: 800; margin-bottom: 20px; }
+        .contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; color: #475569; }
+        .contact-row i { color: var(--primary); width: 15px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 class="main-title">Cv Forge</h1>
-        <div class="typing-box" id="typing"></div>
+        <h1 class="main-title">Cv Forge AI</h1>
+        <div id="typing" class="typing-text"></div>
     </header>
 
     <div class="app-container">
         <div class="editor-card">
-            <div class="input-group"><label>الاسم بالكامل</label><input type="text" id="inName" oninput="save()"></div>
+            <div class="input-group"><label>الاسم الكامل</label><input type="text" id="inName" oninput="save()"></div>
             <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="inJob" oninput="save()"></div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()"></div>
-                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()" placeholder="1995-12-16"></div>
+                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()" placeholder="الإسكندرية، مصر"></div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div class="input-group"><label>رقم الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
-                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="inEmail" oninput="save()"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group"><label>الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
+                <div class="input-group"><label>الإيميل</label><input type="email" id="inEmail" oninput="save()"></div>
             </div>
 
             <div class="input-group"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
             <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="3"></textarea></div>
-            <div class="input-group"><label>الخبرات العملية (كل سطر خبرة منفصلة)</label><textarea id="inExp" oninput="save()" rows="5"></textarea></div>
-            <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="3"></textarea></div>
+            <div class="input-group"><label>الخبرات العملية (كل سطر خبرة)</label><textarea id="inExp" oninput="save()" rows="4"></textarea></div>
+            <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="2"></textarea></div>
             <div class="input-group"><label>المهارات (افصل بفاصلة)</label><input type="text" id="inSkills" oninput="save()"></div>
 
-            <button class="btn-main" onclick="generate()">تحميل بصيغة PDF عالية الدقة</button>
-            <button class="btn-clear" onclick="clearAll()">مسح كافة البيانات</button>
+            <button class="btn-download" onclick="generatePDF()">توليد وتحميل السيرة الذاتية</button>
+            <button onclick="localStorage.clear(); location.reload();" style="background:none; border:none; color:#94a3b8; width:100%; cursor:pointer; margin-top:10px; text-decoration:underline;">إعادة ضبط</button>
         </div>
     </div>
 
-    <div id="modal"><div class="modal-box" id="modalContent"></div></div>
+    <div id="modal-overlay">
+        <div class="modal-box" id="modal-content"></div>
+    </div>
 
     <div id="pdf-hideout">
         <div id="cv-target" class="cv-document">
             <div class="cv-header">
-                <div class="header-text">
+                <div class="header-info">
                     <h1 id="outName"></h1>
                     <p id="outJob"></p>
                 </div>
-                <div class="photo-frame"><img id="outPhoto" src=""></div>
+                <div class="photo-wrap"><img id="outPhoto" src=""></div>
             </div>
-            <div class="cv-body">
-                <div class="main-col">
-                    <div class="section-h">الخبرات المهنية</div>
-                    <div id="expBox"></div>
-                    <div class="section-h" style="margin-top:30px;">التعليم</div>
-                    <div id="eduBox"></div>
+            <div class="cv-main">
+                <div class="content-area">
+                    <div class="sec-title">الخبرة المهنية</div>
+                    <div id="expList"></div>
+                    <div class="sec-title" style="margin-top:30px;">التعليم</div>
+                    <div id="eduList"></div>
                 </div>
-                <div class="side-col">
-                    <div class="side-title">الملف الشخصي</div>
-                    <div id="outAbout" style="font-size: 14px; margin-bottom: 35px; color: #475569;"></div>
-                    <div class="side-title">التواصل</div>
-                    <div class="contact-box">
-                        <div class="contact-item"><i class="fas fa-calendar"></i> <span id="outBirth"></span></div>
-                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
-                        <div class="contact-item"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
-                        <div class="contact-item"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
-                    </div>
-                    <div class="side-title">المهارات</div>
-                    <div id="skillBox"></div>
+                <div class="sidebar">
+                    <div class="side-head">الملف الشخصي</div>
+                    <div id="outAbout" class="item-text" style="margin-bottom:30px;"></div>
+                    <div class="side-head">بيانات التواصل</div>
+                    <div class="contact-row"><i class="fas fa-calendar"></i> <span id="outBirth"></span></div>
+                    <div class="contact-row"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
+                    <div class="contact-row"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
+                    <div class="contact-row"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
+                    <div class="side-head" style="margin-top:30px;">المهارات</div>
+                    <div id="skillList"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const fields = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills'];
-        const phrases = ["صناعة سيرة ذاتية تبهر أصحاب العمل.", "دقة عالية وتصميم عالمي.", "Cv Forge .. طريقك نحو الوظيفة."];
-        let pIdx = 0, charIdx = 0, isDeleting = false;
+        const ids = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills'];
+        const phrases = ["صمم مستقبلك بلمسة ذكاء.", "سيرتك الذاتية.. بوابتك للوظيفة الحلم.", "Cv Forge .. الدقة والاحترافية."];
+        let p=0, c=0, del=false;
 
-        function typeEffect() {
-            const current = phrases[pIdx];
-            document.getElementById('typing').innerText = isDeleting ? current.substring(0, charIdx--) : current.substring(0, charIdx++);
-            if (!isDeleting && charIdx === current.length + 1) { isDeleting = true; setTimeout(typeEffect, 1500); }
-            else if (isDeleting && charIdx === 0) { isDeleting = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(typeEffect, 500); }
-            else setTimeout(typeEffect, isDeleting ? 40 : 80);
+        function type() {
+            const cur = phrases[p];
+            document.getElementById('typing').innerText = del ? cur.substring(0, c--) : cur.substring(0, c++);
+            if(!del && c === cur.length+1) { del=true; setTimeout(type, 2000); }
+            else if(del && c === 0) { del=false; p=(p+1)%phrases.length; setTimeout(type, 500); }
+            else setTimeout(type, del ? 50 : 100);
         }
 
-        function save() { fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value)); }
-        function load() { fields.forEach(f => { const val = localStorage.getItem(f); if(val) document.getElementById(f).value = val; }); typeEffect(); }
-        function clearAll() { if(confirm("تأكيد مسح البيانات؟")) { localStorage.clear(); location.reload(); } }
+        function save() { ids.forEach(id => localStorage.setItem(id, document.getElementById(id).value)); }
+        function load() { ids.forEach(id => { const v = localStorage.getItem(id); if(v) document.getElementById(id).value = v; }); type(); }
 
         document.getElementById('inPhoto').onchange = e => {
-            const r = new FileReader();
-            r.onload = () => document.getElementById('outPhoto').src = r.result;
-            r.readAsDataURL(e.target.files[0]);
+            const reader = new FileReader();
+            reader.onload = () => document.getElementById('outPhoto').src = reader.result;
+            reader.readAsDataURL(e.target.files[0]);
         };
 
-        function showStatus(type, msg) {
-            const m = document.getElementById('modal');
-            const c = document.getElementById('modalContent');
-            m.style.display = 'flex';
-            c.innerHTML = type === 'loading' ? `<div class="loader"></div><p>${msg}</p>` : `<i class="fas fa-check-circle" style="font-size:50px; color:#22c55e; margin-bottom:15px; display:block;"></i><h3>تمت المهمة!</h3><p>${msg}</p><button onclick="document.getElementById('modal').style.display='none'" class="btn-main" style="padding:10px; margin-top:15px;">رائع</button>`;
+        function showModal(mode, text) {
+            const over = document.getElementById('modal-overlay');
+            const box = document.getElementById('modal-content');
+            over.style.display = 'flex';
+            box.innerHTML = mode === 'wait' ? `<div class="spinner"></div><p>${text}</p>` : `<i class="fas fa-check-circle" style="font-size:40px; color:#22c55e; margin-bottom:10px;"></i><h3>تم التحميل!</h3><p>${text}</p><button onclick="document.getElementById('modal-overlay').style.display='none'" class="btn-download" style="padding:10px; margin-top:10px;">حسناً</button>`;
         }
 
-        async function generate() {
-            showStatus('loading', 'جاري تنسيق الحروف العربية وتحسين الدقة...');
+        async function generatePDF() {
+            showModal('wait', 'جاري معالجة النصوص العربية وتنسيق الصفحة...');
             
-            // تعبئة البيانات
+            // تعبئة البيانات في القالب
             document.getElementById('outName').innerText = document.getElementById('inName').value || "الاسم الكامل";
             document.getElementById('outJob').innerText = document.getElementById('inJob').value || "المسمى الوظيفي";
             document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
@@ -183,30 +195,30 @@
             document.getElementById('outPhone').innerText = document.getElementById('inPhone').value;
             document.getElementById('outEmail').innerText = document.getElementById('inEmail').value;
 
-            // الخبرات - مع منع التكرار
+            // الخبرات - حل مشكلة التكرار
             const exps = document.getElementById('inExp').value.split('\n').filter(l => l.trim() !== "");
-            document.getElementById('expBox').innerHTML = exps.map(l => `<div class="entry-item"><div class="entry-desc">${l}</div></div>`).join('');
+            document.getElementById('expList').innerHTML = exps.map(l => `<div class="cv-item"><div class="item-text">${l}</div></div>`).join('');
 
             // التعليم
             const edus = document.getElementById('inEdu').value.split('\n').filter(l => l.trim() !== "");
-            document.getElementById('eduBox').innerHTML = edus.map(l => `<div class="entry-item"><div class="entry-desc">${l}</div></div>`).join('');
+            document.getElementById('eduList').innerHTML = edus.map(l => `<div class="cv-item"><div class="item-text">${l}</div></div>`).join('');
 
             // المهارات
             const skills = document.getElementById('inSkills').value.split(',').filter(s => s.trim() !== "");
-            document.getElementById('skillBox').innerHTML = skills.map(s => `<div class="skill-tag"><span>${s.trim()}</span><div class="dots"><div class="dot-i on"></div><div class="dot-i on"></div><div class="dot-i on"></div><div class="dot-i"></div></div></div>`).join('');
+            document.getElementById('skillList').innerHTML = skills.map(s => `<div style="font-size:13px; font-weight:700; margin-bottom:5px; color:#1e293b;">• ${s.trim()}</div>`).join('');
 
             setTimeout(async () => {
                 const canvas = await html2canvas(document.getElementById('cv-target'), { 
                     scale: 3, 
-                    useCORS: true,
-                    letterRendering: true, // يمنع تداخل الحروف العربية
-                    logging: false
+                    useCORS: true, 
+                    logging: false,
+                    letterRendering: true // يضمن ثبات الحروف العربية
                 });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
                 pdf.save(`CV_${document.getElementById('inName').value || 'Forge'}.pdf`);
-                showStatus('success', 'تم استخراج سيرتك الذاتية بنجاح بنسبة دقة 100%');
-            }, 1200);
+                showModal('done', 'سيرتك الذاتية جاهزة الآن بجودة عالية.');
+            }, 1000);
         }
 
         window.onload = load;
