@@ -3,170 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CVForge | التصميم الهندسي</title>
-    
+    <title>CVForge | Editorial Design</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
     <style>
-        :root { 
-            --m-orange: #d35400; /* اللون البرتقالي المختار */
-            --m-black: #1a1a1a;  /* اللون الأسود الفخم */
-            --site-bg: #0f172a;
-        }
-        
-        body { margin: 0; padding: 0; font-family: 'Cairo', sans-serif; background: var(--site-bg); color: white; overflow-x: hidden; }
-
-        /* واجهة الموقع */
+        :root { --m-orange: #d35400; --m-black: #1a1a1a; --site-bg: #0f172a; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--site-bg); color: white; overflow-x: hidden; }
         .header-site { padding: 20px; text-align: center; background: #1e293b; border-bottom: 2px solid var(--m-orange); }
-        .logo-text { font-size: 26px; font-weight: 900; color: white; }
-        
         .container { max-width: 650px; margin: 30px auto; padding: 20px; }
-        .form-box { background: #1e293b; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
-        
+        .form-box { background: #1e293b; padding: 30px; border-radius: 25px; }
         .input-row { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 8px; font-size: 14px; color: #cbd5e1; font-weight: 700; }
-        input, textarea { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #334155; 
-            background: #0f172a; color: white; font-family: inherit; box-sizing: border-box;
-        }
+        input, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; font-family: inherit; box-sizing: border-box; }
+        .download-trigger { width: 100%; padding: 20px; background: var(--m-orange); border: none; border-radius: 15px; color: white; font-weight: 900; font-size: 18px; cursor: pointer; }
 
-        .download-trigger { 
-            width: 100%; padding: 20px; background: var(--m-orange); border: none; 
-            border-radius: 15px; color: white; font-weight: 900; font-size: 18px; 
-            cursor: pointer; margin-top: 20px; transition: 0.3s;
-        }
-        .download-trigger:hover { transform: scale(1.02); filter: brightness(1.1); }
-
-        /* --- إعدادات الـ PDF (التصميم المطور) --- */
+        /* --- PDF Template (The Core Fix) --- */
         #render-zone { position: absolute; left: -9999px; top: 0; }
-        
         .m-paper { 
             width: 210mm; height: 296.7mm; background: #fff; color: #2d3436;
-            position: relative; overflow: hidden; display: flex; direction: rtl;
+            position: relative; overflow: hidden; display: flex; flex-direction: row; direction: ltr; /* Forced LTR for Layout then text is RTL */
         }
 
-        /* الجزء الأبيض (اليمين) */
-        .m-white-side { width: 65%; height: 100%; padding: 40px 60px; box-sizing: border-box; }
+        /* الجزء الأسود (اليمين في الصورة الأصلية) */
+        .m-black-side { width: 35%; height: 100%; background: var(--m-black); color: #fff; padding: 40px 25px; box-sizing: border-box; padding-top: 110mm; order: 2; text-align: right; direction: rtl;}
         
-        /* الجزء الأسود (اليسار) */
-        .m-black-side { width: 35%; height: 100%; background: var(--m-black); color: #fff; padding: 40px 30px; box-sizing: border-box; padding-top: 110mm; }
+        /* الجزء الأبيض (اليسار) */
+        .m-white-side { width: 65%; height: 100%; padding: 40px 60px; box-sizing: border-box; order: 1; text-align: right; direction: rtl;}
 
         /* المربع البرتقالي (الاسم) */
         .m-orange-banner {
-            position: absolute; top: 45mm; right: 0; width: 65%; height: 55mm;
+            position: absolute; top: 45mm; left: 0; width: 65%; height: 50mm;
             background: var(--m-orange); color: #fff;
-            padding: 40px 60px; box-sizing: border-box;
+            padding: 30px 60px; box-sizing: border-box;
             display: flex; flex-direction: column; justify-content: center;
-            z-index: 2;
+            z-index: 2; text-align: right; direction: rtl;
         }
-        .m-orange-banner h1 { font-size: 50px; margin: 0; font-weight: 900; line-height: 1.1; }
-        .m-orange-banner h2 { font-size: 22px; margin: 5px 0 0; font-weight: 400; }
+        .m-orange-banner h1 { font-size: 45px; margin: 0; font-weight: 900; }
+        .m-orange-banner h2 { font-size: 20px; margin: 5px 0 0; font-weight: 400; }
 
-        /* الصورة (مكانها استراتيجي) */
+        /* الصورة العائمة */
         .m-photo-container {
-            position: absolute; top: 55mm; left: 45mm;
-            width: 190px; height: 240px;
+            position: absolute; top: 55mm; right: 40mm;
+            width: 180px; height: 230px;
             background: #ddd; z-index: 5;
-            border-bottom: 15px solid var(--m-orange);
+            border-bottom: 12px solid var(--m-orange);
             overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* العناوين الجانبية */
-        .m-side-head {
-            background: var(--m-orange); color: white;
-            padding: 8px 15px; font-weight: 900; font-size: 18px;
-            margin-bottom: 15px; display: inline-block; width: 100%; box-sizing: border-box;
-        }
-
-        /* العناوين الرئيسية */
-        .m-main-head {
-            font-size: 22px; font-weight: 900; color: #000;
-            margin: 30px 0 15px; display: flex; align-items: center; gap: 10px;
-        }
-        .m-main-head::after { content: ""; flex: 1; height: 3px; background: #eee; }
-        .m-main-head::before { content: ""; width: 25px; height: 12px; background: var(--m-orange); }
-
-        .m-text { font-size: 14px; line-height: 1.7; color: #444; white-space: pre-line; }
-        .m-contact { font-size: 13px; color: #666; margin-bottom: 50px; }
+        .m-side-head { background: var(--m-orange); color: white; padding: 8px 15px; font-weight: 900; font-size: 16px; margin-bottom: 15px; display: block; }
+        .m-main-head { font-size: 20px; font-weight: 900; color: #000; margin: 25px 0 10px; display: flex; align-items: center; gap: 10px; }
+        .m-main-head::before { content: ""; width: 25px; height: 10px; background: var(--m-orange); display: inline-block; }
+        .m-text { font-size: 13px; line-height: 1.6; color: #444; white-space: pre-line; }
+        .m-contact-top { font-size: 12px; color: #666; margin-bottom: 60px; text-align: right; }
     </style>
 </head>
 <body>
-
-    <header class="header-site">
-        <div class="logo-text">CVForge Editorial</div>
-    </header>
-
-    <div class="container">
-        <div class="form-box">
-            <div class="input-row"><label>الاسم الكامل</label><input type="text" id="mName" placeholder="مريم صالح"></div>
-            <div class="input-row"><label>المسمى الوظيفي</label><input type="text" id="mJob" placeholder="مصممة جرافيك"></div>
-            <div class="input-row"><label>الصورة الشخصية</label><input type="file" id="mFile"></div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="input-row"><label>الهاتف</label><input type="text" id="mPhone"></div>
-                <div class="input-row"><label>الإيميل</label><input type="text" id="mEmail"></div>
-            </div>
-
-            <div class="input-row"><label>نبذة عني</label><textarea id="mAbout" rows="3"></textarea></div>
-            <div class="input-row"><label>الخبرات المهنية</label><textarea id="mExp" rows="5"></textarea></div>
-            <div class="input-row"><label>التعليم</label><textarea id="mEdu" rows="3"></textarea></div>
-            <div class="input-row"><label>المهارات (سطر بسطر)</label><textarea id="mSkills" rows="3"></textarea></div>
-
-            <button class="download-trigger" onclick="buildPDF()">توليد التصميم الهندسي 🚀</button>
+    <header class="header-site"><div class="logo-text">CVForge Editorial</div></header>
+    <div class="container"><div class="form-box">
+        <div class="input-row"><input type="text" id="mName" placeholder="الاسم الكامل"></div>
+        <div class="input-row"><input type="text" id="mJob" placeholder="المسمى الوظيفي"></div>
+        <div class="input-row"><input type="file" id="mFile"></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <input type="text" id="mPhone" placeholder="الهاتف">
+            <input type="text" id="mEmail" placeholder="الإيميل">
         </div>
-    </div>
+        <textarea id="mAbout" rows="3" placeholder="نبذة عني" style="margin-top:15px;"></textarea>
+        <textarea id="mExp" rows="5" placeholder="الخبرات المهنية" style="margin-top:15px;"></textarea>
+        <textarea id="mEdu" rows="2" placeholder="التعليم" style="margin-top:15px;"></textarea>
+        <textarea id="mSkills" rows="2" placeholder="المهارات (سطر بسطر)" style="margin-top:15px;"></textarea>
+        <button class="download-trigger" onclick="buildPDF()">توليد التصميم الأصلي 🚀</button>
+    </div></div>
 
     <div id="render-zone">
         <div id="m-final-cv" class="m-paper">
-            
             <div class="m-white-side">
-                <div class="m-contact">
+                <div class="m-contact-top">
                     <div id="outPhone"></div>
                     <div id="outEmail"></div>
                     <div>القاهرة، مصر</div>
                 </div>
-
-                <div style="height: 65mm;"></div> <div class="m-main-head">نبذة عني</div>
+                <div style="height: 60mm;"></div>
+                <div class="m-main-head">نبذة عني</div>
                 <div id="outAbout" class="m-text"></div>
-
                 <div class="m-main-head">الخبرات المهنية</div>
                 <div id="outExp" class="m-text"></div>
             </div>
-
             <div class="m-black-side">
                 <div class="m-side-head">التعليم</div>
-                <div id="outEdu" style="font-size: 13px; color: #ccc; margin-bottom: 30px;"></div>
-
+                <div id="outEdu" style="font-size: 12px; color: #ccc; margin-bottom: 25px;"></div>
                 <div class="m-side-head">المهارات</div>
-                <div id="outSkills" style="font-size: 13px; color: #ccc; line-height: 2;"></div>
+                <div id="outSkills" style="font-size: 12px; color: #ccc; line-height: 2;"></div>
             </div>
-
-            <div class="m-orange-banner">
-                <h1 id="outName">الاسم</h1>
-                <h2 id="outJob">الوظيفة</h2>
-            </div>
-
-            <div class="m-photo-container">
-                <img id="outPhoto" src="" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-
+            <div class="m-orange-banner"><h1 id="outName"></h1><h2 id="outJob"></h2></div>
+            <div class="m-photo-container"><img id="outPhoto" src="" style="width:100%; height:100%; object-fit:cover;"></div>
         </div>
     </div>
 
     <script>
-        // معالجة الصورة
         document.getElementById('mFile').onchange = e => {
             const f = new FileReader();
             f.onload = () => document.getElementById('outPhoto').src = f.result;
             f.readAsDataURL(e.target.files[0]);
         };
-
         async function buildPDF() {
-            // نقل البيانات
             document.getElementById('outName').innerText = document.getElementById('mName').value || "مريم صالح";
             document.getElementById('outJob').innerText = document.getElementById('mJob').value || "مصممة جرافيك";
             document.getElementById('outPhone').innerText = "📞 " + document.getElementById('mPhone').value;
@@ -177,21 +116,12 @@
             document.getElementById('outSkills').innerText = document.getElementById('mSkills').value;
 
             const element = document.getElementById('m-final-cv');
-            
-            // استخدام html2canvas بدقة 3x
-            const canvas = await html2canvas(element, { 
-                scale: 3, 
-                useCORS: true,
-                backgroundColor: null 
-            });
-
+            const canvas = await html2canvas(element, { scale: 3, useCORS: true });
             const imgData = canvas.toDataURL('image/png');
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            // إضافة الصورة للـ PDF بمقاس A4 الكامل
             pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-            pdf.save(`${document.getElementById('mName').value || 'CV'}_Editorial.pdf`);
+            pdf.save(`CV_Editorial.pdf`);
         }
     </script>
 </body>
