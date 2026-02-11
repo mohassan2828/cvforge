@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cv Forge AI | النسخة الاحترافية الكاملة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cv Forge AI | النسخة المستقرة</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -12,153 +12,162 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --success: #22c55e; --bg: #f3f4f6; }
+        :root { --primary: #1a5f7a; --secondary: #0ea5e9; --success: #22c55e; --bg: #f8fafc; }
         
-        /* تثبيت الموقع ومنع الفراغات */
+        /* ضبط المقاسات ومنع التمرير الجانبي */
+        * { box-sizing: border-box; }
         html, body { 
             margin: 0; padding: 0; width: 100%; overflow-x: hidden; 
             background: var(--bg); font-family: 'Cairo', sans-serif;
-            display: flex; flex-direction: column; align-items: center;
         }
 
         header { 
-            width: 100%; background: #fff; padding: 25px; text-align: center; 
-            border-bottom: 4px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
+            width: 100%; background: #fff; padding: 20px; text-align: center; 
+            border-bottom: 3px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .main-title { font-family: 'Almarai'; font-size: 32px; font-weight: 800; color: var(--primary); }
+        .main-title { font-family: 'Almarai'; font-size: 26px; font-weight: 800; color: var(--primary); margin: 0; }
         #typing { color: var(--secondary); font-size: 14px; font-weight: 600; min-height: 20px; margin-top: 5px; }
 
-        .container { width: 100%; max-width: 650px; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; }
+        /* حاوية المحتوى الرئيسية */
+        .app-container { 
+            width: 100%; max-width: 600px; margin: 0 auto; padding: 20px;
+        }
+        .editor-card { 
+            background: white; padding: 25px; border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%;
+        }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 700; font-size: 13px; color: #334155; margin-bottom: 5px; }
+        label { display: block; font-weight: 700; font-size: 12px; color: #475569; margin-bottom: 5px; }
         input, textarea { 
-            width: 100%; padding: 12px; border: 2px solid #f1f5f9; border-radius: 10px; 
-            font-family: inherit; outline: none; transition: 0.3s; background: #fafbfc;
+            width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; 
+            font-family: inherit; outline: none; transition: 0.3s; background: #fff; font-size: 14px;
         }
-        input:focus { border-color: var(--primary); background: #fff; }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,95,122,0.1); }
 
-        .btn-gen { 
-            width: 100%; padding: 18px; background: var(--primary); color: white; 
-            border: none; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s;
+        .btn-action { 
+            width: 100%; padding: 15px; background: var(--primary); color: white; 
+            border: none; border-radius: 10px; font-size: 16px; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
+        .btn-action:hover { background: #134e66; }
 
-        /* نظام الإشعارات الفاخر */
-        #notification-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center;
+        /* نظام الإشعارات */
+        #status-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;
         }
-        .luxury-modal { background: white; padding: 40px; border-radius: 30px; text-align: center; width: 85%; max-width: 350px; }
-        
-        .loading-pulse {
-            width: 60px; height: 60px; background: var(--primary); border-radius: 50%;
-            margin: 0 auto 20px; animation: pulse 1.5s infinite; display: flex; align-items: center; justify-content: center;
+        .status-box { 
+            background: white; padding: 30px; border-radius: 20px; text-align: center; 
+            width: 85%; max-width: 320px; animation: pop 0.3s ease;
         }
-        .loading-pulse i { color: white; font-size: 24px; }
-        @keyframes pulse { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(26,95,122, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(26,95,122, 0); } 100% { transform: scale(0.9); } }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } }
 
-        /* عزل قالب الـ PDF */
-        #pdf-hideout { position: fixed; top: 0; left: 0; width: 210mm; z-index: -9999; visibility: hidden; pointer-events: none; }
-        .cv-page { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; }
-        .cv-top { background: var(--primary); padding: 50px; color: white; display: flex; justify-content: space-between; align-items: center; height: 230px; }
-        .cv-grid { display: grid; grid-template-columns: 1.6fr 1fr; flex: 1; }
-        .main-p { padding: 40px; }
-        .side-p { background: #f8fafc; padding: 40px 30px; border-right: 2px solid #eee; }
-        .sec-t { color: #000; font-size: 20px; font-weight: 900; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 8px; }
-        .cv-txt { font-size: 15px; white-space: pre-line; line-height: 1.7; margin-bottom: 25px; }
-        .side-label { background: var(--primary); color: white; padding: 8px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-weight: 800; }
-        .contact-item { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 10px; font-weight: 600; color: #444; }
-        .contact-item i { color: var(--primary); width: 15px; }
+        .spinner { 
+            width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); 
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; 
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* عزل قالب الـ PDF عن أبعاد الموقع تماماً */
+        #pdf-render-zone { 
+            position: absolute; top: -10000px; left: -10000px;
+            width: 210mm; height: 297mm; overflow: hidden;
+        }
+        .cv-page { 
+            width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column;
+        }
+        .cv-header { background: var(--primary); padding: 50px; color: white; display: flex; justify-content: space-between; align-items: center; height: 220px; }
+        .cv-body { display: grid; grid-template-columns: 1.6fr 1fr; flex: 1; }
+        .main-col { padding: 40px; }
+        .side-col { background: #f8fafc; padding: 40px 30px; border-right: 2px solid #eee; }
+        .sec-title { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .text-block { font-size: 14px; white-space: pre-line; line-height: 1.6; margin-bottom: 25px; color: #333; }
+        .side-head { background: var(--primary); color: white; padding: 8px; border-radius: 5px; text-align: center; margin-bottom: 15px; font-weight: 800; font-size: 14px; }
+        .contact-row { display: flex; align-items: center; gap: 10px; font-size: 12px; margin-bottom: 8px; font-weight: 700; color: #444; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 class="main-title">Cv Forge AI</h1>
+        <h1 class="main-title">Cv Forge</h1>
         <div id="typing"></div>
     </header>
 
-    <div class="container">
-        <div class="card">
-            <div class="grid-2">
-                <div class="input-group"><label>الاسم بالكامل</label><input type="text" id="inName" oninput="save()"></div>
+    <div class="app-container">
+        <div class="editor-card">
+            <div class="input-row">
+                <div class="input-group"><label>الاسم الكامل</label><input type="text" id="inName" oninput="save()"></div>
                 <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="inJob" oninput="save()"></div>
             </div>
-            <div class="grid-2">
-                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()" placeholder="مثال: 1998-05-12"></div>
-                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()" placeholder="المدينة، الدولة"></div>
+            <div class="input-row">
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="text" id="inBirth" oninput="save()"></div>
+                <div class="input-group"><label>العنوان</label><input type="text" id="inAddress" oninput="save()"></div>
             </div>
-            <div class="grid-2">
-                <div class="input-group"><label>رقم الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
-                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="inEmail" oninput="save()"></div>
+            <div class="input-row">
+                <div class="input-group"><label>الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
+                <div class="input-group"><label>الإيميل</label><input type="email" id="inEmail" oninput="save()"></div>
             </div>
             <div class="input-group"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
-            <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="3"></textarea></div>
-            <div class="input-group"><label>الخبرات المهنية</label><textarea id="inExp" oninput="save()" rows="4"></textarea></div>
-            <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="3"></textarea></div>
-            <div class="grid-2">
-                <div class="input-group"><label>المهارات (افصل بفاصلة)</label><input type="text" id="inSkills" oninput="save()"></div>
+            <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="2"></textarea></div>
+            <div class="input-group"><label>الخبرات العملية</label><textarea id="inExp" oninput="save()" rows="4"></textarea></div>
+            <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="2"></textarea></div>
+            <div class="input-row">
+                <div class="input-group"><label>المهارات</label><input type="text" id="inSkills" oninput="save()"></div>
                 <div class="input-group"><label>اللغات</label><input type="text" id="inLang" oninput="save()"></div>
             </div>
-
-            <button class="btn-gen" onclick="generateProcess()">تحميل الملف بصيغة PDF</button>
+            <button class="btn-action" onclick="processPDF()">تحميل السيرة الذاتية (PDF)</button>
         </div>
     </div>
 
-    <div id="notification-overlay">
-        <div id="modal-content" class="luxury-modal"></div>
-    </div>
+    <div id="status-overlay"><div id="status-box" class="status-box"></div></div>
 
-    <div id="pdf-hideout">
-        <div id="target-cv" class="cv-page">
-            <div class="cv-top">
-                <div><h1 id="outName" style="font-size:45px; margin:0;"></h1><p id="outJob" style="font-size:22px; opacity:0.9;"></p></div>
-                <div style="width:160px; height:160px; border-radius:50%; border:6px solid #fff; overflow:hidden;"><img id="outPhoto" src="" style="width:100%; height:100%; object-fit:cover;"></div>
+    <div id="pdf-render-zone">
+        <div id="cv-template" class="cv-page">
+            <div class="cv-header">
+                <div><h1 id="outName" style="font-size:40px; margin:0;"></h1><p id="outJob" style="font-size:20px; opacity:0.9;"></p></div>
+                <div style="width:150px; height:150px; border-radius:50%; border:5px solid #fff; overflow:hidden;"><img id="outPhoto" style="width:100%; height:100%; object-fit:cover;"></div>
             </div>
-            <div class="cv-grid">
-                <div class="main-p">
-                    <div class="sec-t">الخبرات المهنية</div>
-                    <div id="outExp" class="cv-txt"></div>
-                    <div class="sec-t">التعليم</div>
-                    <div id="outEdu" class="cv-txt"></div>
+            <div class="cv-body">
+                <div class="main-col">
+                    <div class="sec-title">الخبرات المهنية</div>
+                    <div id="outExp" class="text-block"></div>
+                    <div class="sec-title">التعليم</div>
+                    <div id="outEdu" class="text-block"></div>
                 </div>
-                <div class="side-p">
-                    <div class="side-label">الملف الشخصي</div>
-                    <div id="outAbout" class="cv-txt" style="font-size:13px; margin-bottom:20px;"></div>
-                    
-                    <div class="side-label">بيانات التواصل</div>
-                    <div class="contact-item"><i class="fas fa-calendar"></i> <span id="outBirth"></span></div>
-                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
-                    <div class="contact-item"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
-                    <div class="contact-item"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
-                    
-                    <div class="side-label" style="margin-top:20px;">المهارات</div>
-                    <div id="outSkills" class="cv-txt" style="font-size:12px;"></div>
-                    <div class="side-label">اللغات</div>
-                    <div id="outLang" class="cv-txt" style="font-size:13px; font-weight:700;"></div>
+                <div class="side-col">
+                    <div class="side-head">الملف الشخصي</div>
+                    <div id="outAbout" class="text-block" style="font-size:12px;"></div>
+                    <div class="side-head">التواصل</div>
+                    <div class="contact-row"><i class="fas fa-calendar"></i> <span id="outBirth"></span></div>
+                    <div class="contact-row"><i class="fas fa-map-marker-alt"></i> <span id="outAddress"></span></div>
+                    <div class="contact-row"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
+                    <div class="contact-row"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
+                    <div class="side-head" style="margin-top:20px;">المهارات</div>
+                    <div id="outSkills" class="text-block" style="font-size:12px;"></div>
+                    <div class="side-head">اللغات</div>
+                    <div id="outLang" class="text-block" style="font-size:12px; font-weight:bold;"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const fields = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills', 'inLang'];
-        const slogans = ["أهلاً بك في Cv Forge .. اصنع مستقبلك.", "سيرتك الذاتية هي مفتاح وظيفتك القادمة.", "جاري العمل على أدق التفاصيل."];
-        let sIdx=0, charIdx=0, isDeleting=false;
+        const ids = ['inName', 'inJob', 'inBirth', 'inAddress', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inEdu', 'inSkills', 'inLang'];
+        const msgs = ["اصنع مستقبلك مع Cv Forge.", "سيرتك الذاتية تعكس احترافيتك.", "جاري التنسيق بأفضل المعايير."];
+        let mIdx=0, cIdx=0, del=false;
 
-        function typeEffect() {
-            const cur = slogans[sIdx];
-            document.getElementById('typing').innerText = isDeleting ? cur.substring(0, charIdx--) : cur.substring(0, charIdx++);
-            if(!isDeleting && charIdx === cur.length+1) { isDeleting=true; setTimeout(typeEffect, 2000); }
-            else if(isDeleting && charIdx === 0) { isDeleting=false; sIdx=(sIdx+1)%slogans.length; setTimeout(typeEffect, 500); }
-            else setTimeout(typeEffect, isDeleting ? 40 : 80);
+        function type() {
+            const cur = msgs[mIdx];
+            document.getElementById('typing').innerText = del ? cur.substring(0, cIdx--) : cur.substring(0, cIdx++);
+            if(!del && cIdx === cur.length+1) { del=true; setTimeout(type, 2000); }
+            else if(del && cIdx === 0) { del=false; mIdx=(mIdx+1)%msgs.length; setTimeout(type, 500); }
+            else setTimeout(type, del ? 40 : 80);
         }
 
-        function save() { fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value)); }
-        function load() { fields.forEach(f => { const v = localStorage.getItem(f); if(v) document.getElementById(f).value = v; }); typeEffect(); }
+        function save() { ids.forEach(id => localStorage.setItem(id, document.getElementById(id).value)); }
+        function load() { ids.forEach(id => { const v = localStorage.getItem(id); if(v) document.getElementById(id).value = v; }); type(); }
 
         document.getElementById('inPhoto').onchange = e => {
             const r = new FileReader();
@@ -166,22 +175,22 @@
             r.readAsDataURL(e.target.files[0]);
         };
 
-        function showStatus(type) {
-            const over = document.getElementById('notification-overlay');
-            const content = document.getElementById('modal-content');
+        function showStatus(mode) {
+            const over = document.getElementById('status-overlay');
+            const box = document.getElementById('status-box');
             over.style.display = 'flex';
-            if(type === 'loading') {
-                content.innerHTML = `<div class="loading-pulse"><i class="fas fa-file-pdf"></i></div><h3 style="color:var(--primary);">جاري التحميل...</h3><p style="color:#666; margin-top:10px;">نقوم بهندسة ملفك الآن</p>`;
+            if(mode === 'load') {
+                box.innerHTML = `<div class="spinner"></div><h3 style="color:var(--primary);">جاري التوليد...</h3><p style="font-size:13px; color:#666;">انتظر لحظة من فضلك</p>`;
             } else {
-                content.innerHTML = `<i class="fas fa-check-circle" style="font-size:60px; color:var(--success);"></i><h3 style="margin-top:15px;">تم التحميل بنجاح!</h3><p style="color:#666; font-size:14px;">تم حفظ الملف في التنزيلات</p><button onclick="document.getElementById('notification-overlay').style.display='none'" class="btn-gen" style="margin-top:20px; padding:10px;">حسناً</button>`;
+                box.innerHTML = `<i class="fas fa-check-circle" style="font-size:50px; color:var(--success);"></i><h3 style="margin-top:10px;">تم التحميل!</h3><button onclick="document.getElementById('status-overlay').style.display='none'" class="btn-action" style="padding:10px; margin-top:15px; font-size:14px;">حسناً</button>`;
             }
         }
 
-        async function generateProcess() {
-            showStatus('loading');
-            // مزامنة كافة الحقول بلا استثناء
-            document.getElementById('outName').innerText = document.getElementById('inName').value || "الاسم الكامل";
-            document.getElementById('outJob').innerText = document.getElementById('inJob').value || "المسمى الوظيفي";
+        async function processPDF() {
+            showStatus('load');
+            // مزامنة البيانات
+            document.getElementById('outName').innerText = document.getElementById('inName').value || "الاسم";
+            document.getElementById('outJob').innerText = document.getElementById('inJob').value || "الوظيفة";
             document.getElementById('outBirth').innerText = document.getElementById('inBirth').value;
             document.getElementById('outAddress').innerText = document.getElementById('inAddress').value;
             document.getElementById('outPhone').innerText = document.getElementById('inPhone').value;
@@ -192,17 +201,14 @@
             document.getElementById('outSkills').innerText = document.getElementById('inSkills').value.split(',').join('\n• ');
             document.getElementById('outLang').innerText = document.getElementById('inLang').value;
 
-            document.getElementById('pdf-hideout').style.visibility = 'visible';
             setTimeout(async () => {
-                const canvas = await html2canvas(document.getElementById('target-cv'), { scale: 3, useCORS: true });
+                const canvas = await html2canvas(document.getElementById('cv-template'), { scale: 2 });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
                 pdf.save(`CV_${document.getElementById('inName').value || 'Forge'}.pdf`);
-                document.getElementById('pdf-hideout').style.visibility = 'hidden';
-                showStatus('success');
-            }, 1800);
+                showStatus('done');
+            }, 1500);
         }
-
         window.onload = load;
     </script>
 </body>
