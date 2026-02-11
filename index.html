@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cv Forge | International Edition</title>
+    <title>Cv Forge | Perfect Translation</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -54,10 +54,8 @@
         .input-group { margin-bottom: 15px; }
         label { display: block; font-weight: 700; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input, textarea { width: 100%; padding: 12px; border: 2px solid var(--input-border); border-radius: 12px; font-family: inherit; outline: none; background: var(--input-bg); color: var(--text-main); font-size: 14px; }
-        input:focus, textarea:focus { border-color: var(--accent); }
 
-        .btn-download { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        body.dark-mode .btn-download { background: var(--accent); color: var(--primary); }
+        .btn-download { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
 
         #status-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; }
         .status-modal { background: var(--input-bg); padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; border: 2px solid var(--accent); }
@@ -92,8 +90,6 @@
 
     <div class="app-wrapper">
         <div class="main-card">
-            <div id="typing" style="text-align:center; margin-bottom:10px; color:var(--accent); font-weight:bold; font-size:14px;"></div>
-            
             <div class="section-label">المعلومات الأساسية / Basic Info</div>
             <div class="input-grid">
                 <div class="input-group"><label>الاسم الكامل</label><input type="text" id="inName" oninput="save()"></div>
@@ -116,14 +112,14 @@
             <div class="input-group"><label>الخبرات العملية</label><textarea id="inExp" oninput="save()" rows="5"></textarea></div>
             <div class="input-group"><label>التعليم</label><textarea id="inEdu" oninput="save()" rows="3"></textarea></div>
 
-            <div class="section-label">المهارات واللغات / Skills</div>
+            <div class="section-label">المهارات واللغات / Skills & Lang</div>
             <div class="input-grid">
                 <div class="input-group"><label>المهارات</label><input type="text" id="inSkills" oninput="save()"></div>
                 <div class="input-group"><label>اللغات</label><input type="text" id="inLang" oninput="save()"></div>
             </div>
 
             <button class="btn-download" onclick="exportCV()">
-                <i class="fas fa-file-pdf"></i> تحميل السيرة الذاتية PDF
+                <i class="fas fa-file-pdf"></i> تحميل PDF
             </button>
         </div>
     </div>
@@ -169,16 +165,17 @@
             const overlay = document.getElementById('status-overlay');
             const box = document.getElementById('status-box');
             overlay.style.display = 'flex';
-            box.innerHTML = `<div class="spinner"></div><h3>جاري تحويل السيرة الذاتية...</h3><p>سيتم ترجمة كافة البيانات المكتوبة الآن</p>`;
+            box.innerHTML = `<h3>جاري ترجمة كل البيانات...</h3>`;
 
-            for(let id of ['inName', 'inJob', 'inAbout', 'inExp', 'inEdu', 'inAddress']) {
+            // ترجمة كافة الحقول بما فيها المهارات واللغات
+            for(let id of fields) {
                 let text = document.getElementById(id).value;
                 if(!text) continue;
                 try {
                     const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&q=${encodeURI(text)}`);
                     const data = await res.json();
                     document.getElementById(id).value = data[0][0][0];
-                } catch(e) { console.error("Translate Error"); }
+                } catch(e) { console.error("Error translating field: " + id); }
             }
 
             currentLang = lang;
@@ -194,7 +191,6 @@
                 document.getElementById('pdf-label-contact').innerText = "Contact Info";
                 document.getElementById('pdf-label-skills').innerText = "Skills";
                 document.getElementById('pdf-label-lang').innerText = "Languages";
-                box.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success); font-size:40px;"></i><h3>Ready in English!</h3><button onclick="document.getElementById('status-overlay').style.display='none'" class="btn-download" style="padding:10px; font-size:14px;">Great</button>`;
             } else {
                 pdf.classList.remove('ltr');
                 document.getElementById('pdf-label-exp').innerText = "الخبرات المهنية";
@@ -203,8 +199,8 @@
                 document.getElementById('pdf-label-contact').innerText = "التواصل";
                 document.getElementById('pdf-label-skills').innerText = "المهارات";
                 document.getElementById('pdf-label-lang').innerText = "اللغات";
-                overlay.style.display = 'none';
             }
+            overlay.style.display = 'none';
             save();
         }
 
@@ -212,38 +208,24 @@
             document.getElementById('body-tag').classList.toggle('dark-mode');
             const icon = document.getElementById('theme-icon');
             icon.classList.toggle('fa-moon'); icon.classList.toggle('fa-sun');
-            localStorage.setItem('theme', document.getElementById('body-tag').classList.contains('dark-mode') ? 'dark' : 'light');
         }
 
         function save() { fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value)); }
-        function load() { 
-            fields.forEach(f => { const v = localStorage.getItem(f); if(v) document.getElementById(f).value = v; });
-            if(localStorage.getItem('theme') === 'dark') toggleTheme();
-            let i = 0; const txt = "قم بإنشاء سيرتك الذاتية بلغات متعددة الآن..";
-            function type() { if(i < txt.length) { document.getElementById('typing').innerHTML += txt.charAt(i++); setTimeout(type, 100); } }
-            type();
-        }
+        function load() { fields.forEach(f => { if(localStorage.getItem(f)) document.getElementById(f).value = localStorage.getItem(f); }); }
 
         document.getElementById('inPhoto').onchange = e => {
             const r = new FileReader(); r.onload = () => document.getElementById('outPhoto').src = r.result; r.readAsDataURL(e.target.files[0]);
         };
 
         async function exportCV() {
-            document.getElementById('outName').innerText = document.getElementById('inName').value || "Name";
-            document.getElementById('outJob').innerText = document.getElementById('inJob').value || "Job Title";
-            document.getElementById('outAbout').innerText = document.getElementById('inAbout').value;
-            document.getElementById('outExp').innerText = document.getElementById('inExp').value;
-            document.getElementById('outEdu').innerText = document.getElementById('inEdu').value;
-            document.getElementById('outBirth').innerText = document.getElementById('inBirth').value;
-            document.getElementById('outAddress').innerText = document.getElementById('inAddress').value;
-            document.getElementById('outPhone').innerText = document.getElementById('inPhone').value;
-            document.getElementById('outEmail').innerText = document.getElementById('inEmail').value;
-            document.getElementById('outSkills').innerText = document.getElementById('inSkills').value;
-            document.getElementById('outLang').innerText = document.getElementById('inLang').value;
+            fields.forEach(f => {
+                const outId = f.replace('in', 'out');
+                if(document.getElementById(outId)) document.getElementById(outId).innerText = document.getElementById(f).value;
+            });
 
             const over = document.getElementById('status-overlay');
             over.style.display = 'flex';
-            document.getElementById('status-box').innerHTML = `<h3>جاري تصدير PDF...</h3>`;
+            document.getElementById('status-box').innerHTML = `<h3>جاري التحميل...</h3>`;
 
             setTimeout(async () => {
                 const canvas = await html2canvas(document.getElementById('pdf-template'), { scale: 2 });
@@ -255,6 +237,5 @@
         }
         window.onload = load;
     </script>
-    <style>.spinner{width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px;}@keyframes spin{100%{transform:rotate(360deg);}}</style>
 </body>
 </html>
