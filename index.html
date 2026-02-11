@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cv Forge | QR & International Edition</title>
+    <title>Cv Forge | Palette & International Edition</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -28,7 +28,7 @@
             color: #f1f5f9;
         }
         
-        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; background: var(--bg-grad); font-family: 'Cairo', sans-serif; color: var(--text-main); }
 
         header { 
@@ -36,23 +36,31 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        
+        .palette-btn {
+            width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--input-border);
+            background: var(--accent); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
         .lang-switch { display: flex; background: var(--bg-grad); border-radius: 10px; padding: 4px; border: 1px solid var(--input-border); }
-        .lang-btn { padding: 6px 12px; border-radius: 7px; border: none; cursor: pointer; font-size: 11px; font-weight: 800; background: transparent; color: var(--text-muted); }
+        .lang-btn { padding: 6px 10px; border-radius: 7px; border: none; cursor: pointer; font-size: 11px; font-weight: 800; background: transparent; color: var(--text-muted); }
         .lang-btn.active { background: var(--accent); color: white; }
 
         .app-wrapper { width: 100%; max-width: 750px; margin: 25px auto; padding: 0 20px; }
         .main-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 24px; padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.1); }
         
-        .section-label { font-size: 13px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 25px 0 15px; display: flex; align-items: center; gap: 8px; }
+        .section-label { font-size: 13px; font-weight: 800; color: var(--accent); margin: 25px 0 15px; display: flex; align-items: center; gap: 8px; }
         .section-label::after { content: ""; flex: 1; height: 1px; background: var(--input-border); }
 
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .input-group { margin-bottom: 15px; }
         label { display: block; font-weight: 700; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input, textarea { width: 100%; padding: 12px; border: 2px solid var(--input-border); border-radius: 12px; font-family: inherit; outline: none; background: var(--input-bg); color: var(--text-main); font-size: 14px; }
+        input:focus { border-color: var(--accent); }
 
-        .btn-download { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
+        .btn-download { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         
         #status-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; }
         .status-modal { background: var(--input-bg); padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; }
@@ -60,24 +68,24 @@
         /* --- PDF Template --- */
         #pdf-render-zone { position: absolute; top: -20000px; left: -20000px; }
         .pdf-page { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; color: #0f172a; }
-        .pdf-header { background: #0f172a; padding: 50px; color: white; display: flex; justify-content: space-between; align-items: center; height: 240px; }
+        .pdf-header { background: var(--primary); padding: 50px; color: white; display: flex; justify-content: space-between; align-items: center; height: 240px; }
         .pdf-body { display: grid; grid-template-columns: 1.6fr 1fr; flex: 1; }
         .pdf-main { padding: 40px; }
-        .pdf-side { background: #f1f5f9; padding: 40px 30px; border-right: 1px solid #e2e8f0; position: relative; }
+        .pdf-side { background: #f1f5f9; padding: 40px 30px; border-right: 1px solid #e2e8f0; }
         .pdf-page.ltr { direction: ltr; font-family: sans-serif; }
         .pdf-page.ltr .pdf-side { border-right: none; border-left: 1px solid #e2e8f0; }
-        
-        #qr-container { margin-top: auto; padding-top: 20px; text-align: center; }
-        #qr-image { width: 80px; height: 80px; border: 2px solid #0f172a; padding: 5px; border-radius: 10px; }
+        .pdf-divider { height: 3px; background: var(--accent); margin-bottom: 15px; border-radius: 2px; }
+        .pdf-badge { background: var(--primary); color: white; padding: 8px; border-radius: 8px; text-align: center; font-weight: 800; margin-bottom: 15px; font-size: 13px; }
     </style>
 </head>
 <body id="body-tag">
 
     <header>
         <div class="logo-container">
-            <div class="logo-text" style="font-family:'Almarai'; font-weight:900;">CV <span style="color:var(--accent)">FORGE</span></div>
+            <div class="logo-text" style="font-family:'Almarai'; font-weight:900;">CV <span id="logo-forge" style="color:var(--accent)">FORGE</span></div>
         </div>
         <div class="header-actions">
+            <button class="palette-btn" onclick="generatePalette()" title="تغيير الألوان"><i class="fas fa-palette"></i></button>
             <div class="lang-switch">
                 <button class="lang-btn active" id="btn-ar" onclick="handleTranslate('ar')">AR</button>
                 <button class="lang-btn" id="btn-en" onclick="handleTranslate('en')">EN</button>
@@ -90,7 +98,7 @@
 
     <div class="app-wrapper">
         <div class="main-card">
-            <div class="section-label">المعلومات الأساسية / Basic Info</div>
+            <div class="section-label" style="color:var(--accent)">المعلومات / Info</div>
             <div class="input-grid">
                 <div class="input-group"><label>الاسم الكامل</label><input type="text" id="inName" oninput="save()"></div>
                 <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="inJob" oninput="save()"></div>
@@ -99,24 +107,20 @@
                 <div class="input-group"><label>رقم الهاتف</label><input type="text" id="inPhone" oninput="save()"></div>
                 <div class="input-group"><label>الإيميل</label><input type="email" id="inEmail" oninput="save()"></div>
             </div>
-            <div class="input-group">
-                <label>رابط (LinkedIn / Portfolio) - لإنشاء باركود QR</label>
-                <input type="text" id="inLink" placeholder="https://..." oninput="updateQR(); save()">
-            </div>
 
-            <div class="section-label">النبذة والصورة / Profile</div>
+            <div class="section-label" style="color:var(--accent)">النبذة والصورة / Profile</div>
             <div class="input-group"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
             <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="3"></textarea></div>
 
-            <div class="section-label">المسيرة والمهارات / More</div>
+            <div class="section-label" style="color:var(--accent)">المسيرة / Experience</div>
             <div class="input-group"><label>الخبرات العملية</label><textarea id="inExp" oninput="save()" rows="4"></textarea></div>
             <div class="input-grid">
                 <div class="input-group"><label>المهارات</label><input type="text" id="inSkills" oninput="save()"></div>
                 <div class="input-group"><label>اللغات</label><input type="text" id="inLang" oninput="save()"></div>
             </div>
 
-            <button class="btn-download" onclick="exportCV()">
-                <i class="fas fa-file-pdf"></i> تحميل PDF مع الباركود
+            <button class="btn-download" id="main-download-btn" onclick="exportCV()">
+                <i class="fas fa-file-pdf"></i> تحميل السيرة الذاتية
             </button>
         </div>
     </div>
@@ -125,30 +129,28 @@
 
     <div id="pdf-render-zone">
         <div id="pdf-template" class="pdf-page">
-            <div class="pdf-header">
-                <div><h1 id="outName" style="font-size:45px; margin:0;"></h1><p id="outJob" style="font-size:20px; color:#38bdf8;"></p></div>
+            <div id="pdf-header" class="pdf-header">
+                <div><h1 id="outName" style="font-size:45px; margin:0;"></h1><p id="outJob" style="font-size:20px; opacity:0.9;"></p></div>
                 <div style="width:150px; height:150px; border-radius:20px; border:4px solid white; overflow:hidden;"><img id="outPhoto" style="width:100%; height:100%; object-fit:cover;"></div>
             </div>
             <div class="pdf-body">
                 <div class="pdf-main">
-                    <div id="pdf-label-exp" style="color:#0f172a; font-size:18px; font-weight:900; border-bottom:3px solid #38bdf8; margin-bottom:15px;">الخبرات المهنية</div>
-                    <div id="outExp" style="white-space:pre-line; line-height:1.6; font-size:13px; margin-bottom:20px;"></div>
+                    <div id="pdf-label-exp" style="color:var(--primary); font-size:18px; font-weight:900;">الخبرات المهنية</div>
+                    <div class="pdf-divider" id="pdf-div-1"></div>
+                    <div id="outExp" style="white-space:pre-line; line-height:1.6; font-size:13px; margin-bottom:25px;"></div>
                 </div>
-                <div class="pdf-side">
-                    <div id="pdf-label-about" style="background:#0f172a; color:white; padding:8px; border-radius:8px; text-align:center; font-weight:800; margin-bottom:15px; font-size:13px;">الملف الشخصي</div>
-                    <div id="outAbout" style="font-size:11px; margin-bottom:20px;"></div>
+                <div class="pdf-side" id="pdf-sidebar">
+                    <div id="pdf-label-about" class="pdf-badge">الملف الشخصي</div>
+                    <div id="outAbout" style="font-size:11px; margin-bottom:25px;"></div>
                     
-                    <div id="pdf-label-contact" style="background:#0f172a; color:white; padding:8px; border-radius:8px; text-align:center; font-weight:800; margin-bottom:15px; font-size:13px;">التواصل</div>
+                    <div id="pdf-label-contact" class="pdf-badge">التواصل</div>
                     <div style="font-size:10px; margin-bottom:5px;">📞 <span id="outPhone"></span></div>
-                    <div style="font-size:10px; margin-bottom:20px;">✉️ <span id="outEmail"></span></div>
+                    <div style="font-size:10px; margin-bottom:25px;">✉️ <span id="outEmail"></span></div>
 
-                    <div id="pdf-label-skills" style="background:#0f172a; color:white; padding:8px; border-radius:8px; text-align:center; font-weight:800; margin-bottom:15px; font-size:13px;">المهارات</div>
-                    <div id="outSkills" style="font-size:10px; margin-bottom:20px;"></div>
-
-                    <div id="qr-container">
-                        <img id="qr-image" src="" style="display:none;">
-                        <p id="qr-text" style="font-size:9px; margin-top:5px; font-weight:bold; color:#0f172a;">SCAN TO VIEW LINK</p>
-                    </div>
+                    <div id="pdf-label-skills" class="pdf-badge">المهارات</div>
+                    <div id="outSkills" style="font-size:10px; margin-bottom:25px;"></div>
+                    <div id="pdf-label-lang" class="pdf-badge">اللغات</div>
+                    <div id="outLang" style="font-size:11px; text-align:center; font-weight:bold;"></div>
                 </div>
             </div>
         </div>
@@ -156,27 +158,36 @@
 
     <script>
         let currentLang = 'ar';
-        const fields = ['inName', 'inJob', 'inPhone', 'inEmail', 'inLink', 'inAbout', 'inExp', 'inSkills', 'inLang'];
+        const palettes = [
+            { primary: '#0f172a', accent: '#38bdf8' }, // Default Navy
+            { primary: '#1e3a8a', accent: '#fbbf24' }, // Royal Blue & Gold
+            { primary: '#064e3b', accent: '#34d399' }, // Emerald Green
+            { primary: '#4c1d95', accent: '#a78bfa' }, // Modern Purple
+            { primary: '#7f1d1d', accent: '#f87171' }, // Deep Red
+            { primary: '#44403c', accent: '#d6d3d1' }  // Classic Stone
+        ];
+        let pIndex = 0;
 
-        function updateQR() {
-            const link = document.getElementById('inLink').value;
-            const qrImg = document.getElementById('qr-image');
-            if(link) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(link)}`;
-                qrImg.style.display = 'inline-block';
-            } else {
-                qrImg.style.display = 'none';
-            }
+        function generatePalette() {
+            pIndex = (pIndex + 1) % palettes.length;
+            const p = palettes[pIndex];
+            document.documentElement.style.setProperty('--primary', p.primary);
+            document.documentElement.style.setProperty('--accent', p.accent);
+            
+            // تحديث ألوان الـ PDF يدوياً قبل الرندر
+            document.getElementById('pdf-header').style.backgroundColor = p.primary;
+            document.getElementById('pdf-div-1').style.backgroundColor = p.accent;
+            const badges = document.querySelectorAll('.pdf-badge');
+            badges.forEach(b => b.style.backgroundColor = p.primary);
         }
 
         async function handleTranslate(lang) {
             if(lang === currentLang) return;
-            const overlay = document.getElementById('status-overlay');
-            overlay.style.display = 'flex';
+            document.getElementById('status-overlay').style.display = 'flex';
             document.getElementById('status-box').innerHTML = `<h3>جاري الترجمة...</h3>`;
 
+            const fields = ['inName', 'inJob', 'inAbout', 'inExp', 'inSkills', 'inLang'];
             for(let id of fields) {
-                if(id === 'inLink' || id === 'inPhone' || id === 'inEmail') continue;
                 let text = document.getElementById(id).value;
                 if(!text) continue;
                 try {
@@ -193,20 +204,20 @@
             const pdf = document.getElementById('pdf-template');
             if(lang === 'en') {
                 pdf.classList.add('ltr');
-                document.getElementById('pdf-label-exp').innerText = "Experience";
+                document.getElementById('pdf-label-exp').innerText = "Professional Experience";
                 document.getElementById('pdf-label-about').innerText = "Profile";
                 document.getElementById('pdf-label-contact').innerText = "Contact";
                 document.getElementById('pdf-label-skills').innerText = "Skills";
-                document.getElementById('qr-text').innerText = "SCAN TO VIEW LINK";
+                document.getElementById('pdf-label-lang').innerText = "Languages";
             } else {
                 pdf.classList.remove('ltr');
                 document.getElementById('pdf-label-exp').innerText = "الخبرات المهنية";
                 document.getElementById('pdf-label-about').innerText = "الملف الشخصي";
                 document.getElementById('pdf-label-contact').innerText = "التواصل";
                 document.getElementById('pdf-label-skills').innerText = "المهارات";
-                document.getElementById('qr-text').innerText = "امسح الكود للمزيد";
+                document.getElementById('pdf-label-lang').innerText = "اللغات";
             }
-            overlay.style.display = 'none';
+            document.getElementById('status-overlay').style.display = 'none';
             save();
         }
 
@@ -216,10 +227,14 @@
             icon.classList.toggle('fa-moon'); icon.classList.toggle('fa-sun');
         }
 
-        function save() { fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value)); }
-        function load() { 
+        function save() {
+            const fields = ['inName', 'inJob', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inSkills', 'inLang'];
+            fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value));
+        }
+
+        function load() {
+            const fields = ['inName', 'inJob', 'inPhone', 'inEmail', 'inAbout', 'inExp', 'inSkills', 'inLang'];
             fields.forEach(f => { if(localStorage.getItem(f)) document.getElementById(f).value = localStorage.getItem(f); });
-            updateQR();
         }
 
         document.getElementById('inPhoto').onchange = e => {
@@ -227,22 +242,19 @@
         };
 
         async function exportCV() {
-            fields.forEach(f => {
-                const outId = f.replace('in', 'out');
-                if(document.getElementById(outId)) document.getElementById(outId).innerText = document.getElementById(f).value;
-            });
+            const map = { inName:'outName', inJob:'outJob', inAbout:'outAbout', inExp:'outExp', inPhone:'outPhone', inEmail:'outEmail', inSkills:'outSkills', inLang:'outLang' };
+            Object.keys(map).forEach(inId => document.getElementById(map[inId]).innerText = document.getElementById(inId).value);
 
-            const over = document.getElementById('status-overlay');
-            over.style.display = 'flex';
-            document.getElementById('status-box').innerHTML = `<h3>جاري تحضير الملف...</h3>`;
+            document.getElementById('status-overlay').style.display = 'flex';
+            document.getElementById('status-box').innerHTML = `<h3>جاري توليد PDF بألوانك الجديدة...</h3>`;
 
             setTimeout(async () => {
-                const canvas = await html2canvas(document.getElementById('pdf-template'), { useCORS: true, scale: 2 });
+                const canvas = await html2canvas(document.getElementById('pdf-template'), { scale: 2 });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-                pdf.save(`CV_QR_${document.getElementById('inName').value || 'Forge'}.pdf`);
-                over.style.display = 'none';
-            }, 1200);
+                pdf.save(`CV_Custom_${document.getElementById('inName').value || 'Forge'}.pdf`);
+                document.getElementById('status-overlay').style.display = 'none';
+            }, 1000);
         }
         window.onload = load;
     </script>
