@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV FORGE | 3D Premium Edition</title>
+    <title>CV FORGE | The Special Edition</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -23,204 +23,192 @@
 
         body { 
             background-color: var(--base-white); 
-            font-family: 'Cairo', 'Poppins', sans-serif; 
+            font-family: 'Cairo', sans-serif; 
             margin: 0; padding: 0; color: var(--text);
             transition: all 0.4s ease;
         }
 
-        /* --- 3D Neumorphic Header --- */
+        /* --- Header & UI --- */
         header {
-            padding: 20px 40px;
+            padding: 15px 30px;
             background: var(--base-white);
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
             position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo-box {
-            font-size: 24px; font-weight: 900; color: var(--primary);
-            text-shadow: 2px 2px 4px var(--shadow-dark);
-        }
+        .logo-box { font-size: 22px; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .logo-box i { color: var(--accent); }
 
-        .lang-selector {
-            display: flex; gap: 8px; padding: 5px;
-            background: var(--base-white);
-            border-radius: 15px;
-            box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-        }
+        .lang-selector { display: flex; gap: 5px; background: #eee; padding: 4px; border-radius: 12px; }
+        .lang-btn { padding: 6px 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 800; background: transparent; }
+        .lang-btn.active { background: var(--accent); color: white; }
 
-        .lang-btn {
-            border: none; padding: 8px 15px; border-radius: 10px;
-            cursor: pointer; font-weight: 800; font-size: 12px;
-            background: transparent; color: var(--text);
-            transition: 0.3s;
-        }
-
-        .lang-btn.active {
-            background: var(--base-white);
-            box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-            color: var(--accent);
-        }
-
-        /* --- Main 3D Container --- */
-        .app-container { max-width: 900px; margin: 40px auto; padding: 20px; }
-
+        /* --- App Container --- */
+        .app-container { max-width: 850px; margin: 40px auto; padding: 0 20px; }
         .glass-card {
             background: var(--base-white);
-            padding: 40px; border-radius: 30px;
+            padding: 35px; border-radius: 25px;
             box-shadow: 20px 20px 60px var(--shadow-dark), -20px -20px 60px var(--shadow-light);
-            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        .section-3d-title {
-            font-weight: 900; font-size: 18px; color: var(--accent);
-            margin: 30px 0 20px; display: flex; align-items: center; gap: 10px;
-        }
+        .section-title { font-weight: 900; color: var(--accent); margin: 25px 0 15px; display: flex; align-items: center; gap: 10px; font-size: 16px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 
-        /* --- Form Elements --- */
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; opacity: 0.8; }
-        
+        label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text); opacity: 0.8; }
         input, textarea {
-            width: 100%; padding: 15px; border: none; border-radius: 15px;
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
             background: var(--base-white);
             box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-            font-family: inherit; color: var(--text); outline: none;
+            font-family: inherit; outline: none;
         }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-
-        .btn-main {
-            width: 100%; padding: 20px; border: none; border-radius: 20px;
-            background: var(--base-white);
-            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-            font-size: 18px; font-weight: 900; color: var(--primary);
-            cursor: pointer; transition: 0.2s; margin-top: 40px;
+        .download-btn {
+            width: 100%; padding: 20px; border: none; border-radius: 15px;
+            background: var(--primary); color: white;
+            font-size: 17px; font-weight: 900; cursor: pointer; margin-top: 30px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-main:active {
-            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-            transform: scale(0.98);
-        }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); padding: 15px 30px; background: var(--primary); color: white; border-radius: 50px; display: none; z-index: 10000; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* --- PDF Rendering Zone (Hidden) --- */
+        /* --- Global PDF Design --- */
         #pdf-render-zone { position: absolute; top: -20000px; left: -20000px; }
         .pdf-page { width: 210mm; height: 297mm; background: white; display: grid; grid-template-columns: 75mm 135mm; direction: rtl; }
         .pdf-page.ltr { direction: ltr; grid-template-columns: 135mm 75mm; }
-        .pdf-sidebar { background: #2c3e50; color: white; padding: 40px 25px; }
+        .pdf-sidebar { background: #2c3e50; color: white; padding: 40px 25px; display: flex; flex-direction: column; align-items: center; }
         .pdf-content { padding: 50px 40px; }
-        .pdf-h { border-bottom: 2px solid #eee; padding-bottom: 5px; margin: 25px 0 10px; font-weight: 900; }
+        .pdf-h { border-bottom: 2px solid #eee; padding-bottom: 5px; margin: 25px 0 10px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
+        .pdf-text { font-size: 13px; line-height: 1.6; color: #444; white-space: pre-line; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-box">CV<span style="color:var(--accent)">FORGE</span></div>
+    <div class="logo-box"><i class="fas fa-file-invoice"></i> CV<span style="color:var(--accent)">FORGE</span> PRO</div>
     <div class="lang-selector">
-        <button class="lang-btn active" onclick="updateLang('ar', this)">AR</button>
-        <button class="lang-btn" onclick="updateLang('en', this)">EN</button>
-        <button class="lang-btn" onclick="updateLang('fr', this)">FR</button>
-        <button class="lang-btn" onclick="updateLang('it', this)">IT</button>
-        <button class="lang-btn" onclick="updateLang('de', this)">DE</button>
+        <button class="lang-btn active" onclick="changeLang('ar', this)">AR</button>
+        <button class="lang-btn" onclick="changeLang('en', this)">EN</button>
+        <button class="lang-btn" onclick="changeLang('fr', this)">FR</button>
+        <button class="lang-btn" onclick="changeLang('it', this)">IT</button>
+        <button class="lang-btn" onclick="changeLang('de', this)">DE</button>
     </div>
 </header>
 
 <div class="app-container">
     <div class="glass-card">
-        <div class="section-3d-title" id="t-personal">المعلومات الشخصية</div>
+        <div class="section-title" id="t-p"><i class="fas fa-user"></i> المعلومات الشخصية</div>
         <div class="grid">
-            <div class="input-group"><label id="l-name">الاسم الكامل</label><input type="text" id="inName"></div>
-            <div class="input-group"><label id="l-job">المسمى الوظيفي</label><input type="text" id="inJob"></div>
+            <div><label id="l-n">الاسم الكامل</label><input type="text" id="inName"></div>
+            <div><label id="l-j">المسمى الوظيفي</label><input type="text" id="inJob"></div>
         </div>
         <div class="grid">
-            <div class="input-group"><label id="l-phone">رقم الهاتف</label><input type="text" id="inPhone"></div>
-            <div class="input-group"><label id="l-email">البريد الإلكتروني</label><input type="text" id="inEmail"></div>
-        </div>
-
-        <div class="section-3d-title" id="t-career">المسيرة والخبرات</div>
-        <div class="input-group"><label id="l-about">النبذة التعريفية</label><textarea id="inAbout" rows="3"></textarea></div>
-        <div class="input-group"><label id="l-exp">الخبرات المهنية</label><textarea id="inExp" rows="5"></textarea></div>
-        <div class="grid">
-            <div class="input-group"><label id="l-skills">المهارات</label><textarea id="inSkills" rows="2"></textarea></div>
-            <div class="input-group"><label id="l-lang">اللغات</label><textarea id="inLang" rows="2"></textarea></div>
+            <div><label id="l-h">رقم الهاتف</label><input type="text" id="inPhone"></div>
+            <div><label id="l-e">البريد الإلكتروني</label><input type="text" id="inEmail"></div>
         </div>
 
-        <button class="btn-main" onclick="exportPDF()" id="b-download">تحميل السيرة الذاتية PDF</button>
+        <div class="section-title" id="t-c"><i class="fas fa-briefcase"></i> المسيرة والخبرات</div>
+        <div style="margin-bottom:15px;"><label id="l-a">النبذة التعريفية</label><textarea id="inAbout" rows="3"></textarea></div>
+        <div style="margin-bottom:15px;"><label id="l-ex">الخبرات المهنية</label><textarea id="inExp" rows="5"></textarea></div>
+        
+        <div class="grid">
+            <div><label id="l-s">المهارات</label><textarea id="inSkills" rows="2"></textarea></div>
+            <div><label id="l-lg">اللغات</label><textarea id="inLang" rows="2"></textarea></div>
+        </div>
+
+        <button class="download-btn" onclick="generatePDF()">
+            <i class="fas fa-download"></i> <span id="b-d">تحميل السيرة الذاتية (PDF)</span>
+        </button>
     </div>
 </div>
 
+<div id="toast"><i class="fas fa-sync fa-spin"></i> <span id="toast-text"></span></div>
+
 <div id="pdf-render-zone">
-    <div id="pdf-canvas" class="pdf-page">
+    <div id="pdf-ui" class="pdf-page">
         <div class="pdf-sidebar">
-            <div style="width:130px; height:130px; border-radius:50%; background:#eee; margin:0 auto 30px;"></div>
-            <h3 id="ph-contact" style="color:var(--accent)">اتصال</h3>
-            <p id="outPhone" style="font-size:12px"></p>
-            <p id="outEmail" style="font-size:12px"></p>
-            <h3 id="ph-skills" style="color:var(--accent); margin-top:40px;">المهارات</h3>
-            <p id="outSkills" style="font-size:12px"></p>
-            <h3 id="ph-lang" style="color:var(--accent); margin-top:40px;">اللغات</h3>
-            <p id="outLang" style="font-size:12px"></p>
+            <div style="width:130px; height:130px; border-radius:50%; background:#ecf0f1; margin-bottom:30px;"></div>
+            <div style="width:100%">
+                <div class="pdf-h" id="ph-contact" style="color:var(--accent); border-color:rgba(255,255,255,0.1)">اتصال</div>
+                <div style="font-size:11px; margin-bottom:8px;"><i class="fas fa-phone"></i> <span id="outPhone"></span></div>
+                <div style="font-size:11px;"><i class="fas fa-envelope"></i> <span id="outEmail"></span></div>
+                
+                <div class="pdf-h" id="ph-skills" style="color:var(--accent); border-color:rgba(255,255,255,0.1); margin-top:30px;">المهارات</div>
+                <div id="outSkills" style="font-size:11px; white-space:pre-line;"></div>
+            </div>
         </div>
         <div class="pdf-content">
-            <h1 id="outName" style="font-size:35px; margin:0;"></h1>
-            <h2 id="outJob" style="color:var(--accent); margin:5px 0 40px;"></h2>
+            <h1 id="outName" style="font-size:35px; margin:0; color:#2c3e50;"></h1>
+            <p id="outJob" style="font-size:18px; color:var(--accent); font-weight:700; margin:5px 0 30px;"></p>
+            
             <div class="pdf-h" id="ph-about">الملف الشخصي</div>
-            <p id="outAbout" style="white-space:pre-line; font-size:13px;"></p>
-            <div class="pdf-h" id="ph-exp">الخبرة العملية</div>
-            <p id="outExp" style="white-space:pre-line; font-size:13px;"></p>
+            <div id="outAbout" class="pdf-text"></div>
+            
+            <div class="pdf-h" id="ph-exp">الخبرة المهنية</div>
+            <div id="outExp" class="pdf-text"></div>
+            
+            <div class="pdf-h" id="ph-lang">اللغات</div>
+            <div id="outLang" class="pdf-text"></div>
         </div>
     </div>
 </div>
 
 <script>
-    const dictionary = {
-        ar: { personal: "المعلومات الشخصية", career: "المسيرة والخبرات", name: "الاسم الكامل", job: "المسمى الوظيفي", phone: "رقم الهاتف", email: "البريد الإلكتروني", about: "النبذة التعريفية", exp: "الخبرات المهنية", skills: "المهارات", lang: "اللغات", download: "تحميل السيرة الذاتية PDF", contact: "اتصال", profile: "الملف الشخصي" },
-        en: { personal: "Personal Details", career: "Career & Experience", name: "Full Name", job: "Job Title", phone: "Phone", email: "Email", about: "Summary", exp: "Work Experience", skills: "Skills", lang: "Languages", download: "Download CV (PDF)", contact: "Contact", profile: "Profile" },
-        fr: { personal: "Infos Personnelles", career: "Parcours et Expérience", name: "Nom Complet", job: "Titre du Poste", phone: "Téléphone", email: "E-mail", about: "Résumé", exp: "Expérience", skills: "Compétences", lang: "Langues", download: "Télécharger PDF", contact: "Contact", profile: "Profil" },
-        it: { personal: "Info Personali", career: "Esperienza", name: "Nome Completo", job: "Titolo", phone: "Telefono", email: "Email", about: "Profilo", exp: "Esperienza Lavorativa", skills: "Abilità", lang: "Lingue", download: "Scarica PDF", contact: "Contatti", profile: "Sommario" },
-        de: { personal: "Persönliche Daten", career: "Erfahrung", name: "Name", job: "Beruf", phone: "Telefon", email: "E-Mail", about: "Über mich", exp: "Berufserfahrung", skills: "Fähigkeiten", lang: "Sprachen", download: "PDF Herunterladen", contact: "Kontakt", profile: "Profil" }
+    const dict = {
+        ar: { p: "المعلومات الشخصية", c: "المسيرة والخبرات", n: "الاسم الكامل", j: "المسمى الوظيفي", h: "رقم الهاتف", e: "البريد الإلكتروني", a: "النبذة التعريفية", ex: "الخبرات المهنية", s: "المهارات", lg: "اللغات", d: "تحميل السيرة الذاتية (PDF)", ct: "اتصال", pr: "الملف الشخصي", ts: "جاري التحميل..." },
+        en: { p: "Personal Information", c: "Career & Experience", n: "Full Name", j: "Job Title", h: "Phone Number", e: "Email", a: "Professional Summary", ex: "Work Experience", s: "Skills", lg: "Languages", d: "Download CV (PDF)", ct: "Contact", pr: "Profile", ts: "Downloading..." },
+        fr: { p: "Informations Personnelles", c: "Expérience", n: "Nom Complet", j: "Poste", h: "Téléphone", e: "E-mail", a: "Résumé", ex: "Expérience Professionnelle", s: "Compétences", lg: "Langues", d: "Télécharger (PDF)", ct: "Contact", pr: "Profil", ts: "Téléchargement..." },
+        it: { p: "Info Personali", c: "Esperienza", n: "Nome Completo", j: "Titolo", h: "Telefono", e: "Email", a: "Sommario", ex: "Esperienza Lavorativa", s: "Abilità", lg: "Lingue", d: "Scarica (PDF)", ct: "Contatto", pr: "Sommario", ts: "Scaricando..." },
+        de: { p: "Persönliche Infos", c: "Erfahrung", n: "Vollständiger Name", j: "Beruf", h: "Telefon", e: "E-Mail", a: "Über mich", ex: "Berufserfahrung", s: "Fähigkeiten", lg: "Sprachen", d: "Herunterladen (PDF)", ct: "Kontakt", pr: "Profil", ts: "Wird geladen..." }
     };
 
-    let activeL = 'ar';
+    let curLang = 'ar';
 
-    function updateLang(l, btn) {
-        activeL = l;
+    function changeLang(l, btn) {
+        curLang = l;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        const isAr = l === 'ar';
+        document.body.dir = isAr ? 'rtl' : 'ltr';
+        document.getElementById('pdf-ui').className = isAr ? 'pdf-page' : 'pdf-page ltr';
         
-        const isRtl = l === 'ar';
-        document.body.dir = isRtl ? 'rtl' : 'ltr';
-        document.getElementById('pdf-canvas').className = isRtl ? 'pdf-page' : 'pdf-page ltr';
-        
-        const d = dictionary[l];
-        document.getElementById('t-personal').innerText = d.personal;
-        document.getElementById('t-career').innerText = d.career;
-        document.getElementById('l-name').innerText = d.name;
-        document.getElementById('l-job').innerText = d.job;
-        document.getElementById('l-phone').innerText = d.phone;
-        document.getElementById('l-email').innerText = d.email;
-        document.getElementById('l-about').innerText = d.about;
-        document.getElementById('l-exp').innerText = d.exp;
-        document.getElementById('l-skills').innerText = d.skills;
-        document.getElementById('l-lang').innerText = d.lang;
-        document.getElementById('b-download').innerText = d.download;
+        const d = dict[l];
+        document.getElementById('t-p').innerHTML = `<i class="fas fa-user"></i> ${d.p}`;
+        document.getElementById('t-c').innerHTML = `<i class="fas fa-briefcase"></i> ${d.c}`;
+        document.getElementById('l-n').innerText = d.n;
+        document.getElementById('l-j').innerText = d.j;
+        document.getElementById('l-h').innerText = d.h;
+        document.getElementById('l-e').innerText = d.e;
+        document.getElementById('l-a').innerText = d.a;
+        document.getElementById('l-ex').innerText = d.ex;
+        document.getElementById('l-s').innerText = d.s;
+        document.getElementById('l-lg').innerText = d.lg;
+        document.getElementById('b-d').innerText = d.d;
 
-        // PDF Titles
-        document.getElementById('ph-contact').innerText = d.contact;
-        document.getElementById('ph-skills').innerText = d.skills;
-        document.getElementById('ph-lang').innerText = d.lang;
-        document.getElementById('ph-about').innerText = d.profile;
-        document.getElementById('ph-exp').innerText = d.exp;
+        document.getElementById('ph-contact').innerText = d.ct;
+        document.getElementById('ph-skills').innerText = d.s;
+        document.getElementById('ph-about').innerText = d.pr;
+        document.getElementById('ph-exp').innerText = d.ex;
+        document.getElementById('ph-lang').innerText = d.lg;
     }
 
-    async function exportPDF() {
+    async function generatePDF() {
+        const t = document.getElementById('toast');
+        t.innerText = dict[curLang].ts;
+        t.style.display = 'block';
+
         const fields = ['Name', 'Job', 'Phone', 'Email', 'About', 'Exp', 'Skills', 'Lang'];
         fields.forEach(f => { document.getElementById('out' + f).innerText = document.getElementById('in' + f).value; });
 
-        const canvas = await html2canvas(document.getElementById('pdf-canvas'), { scale: 3 });
-        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-        pdf.save(`CV_Premium_${activeL}.pdf`);
+        setTimeout(async () => {
+            const canvas = await html2canvas(document.getElementById('pdf-ui'), { scale: 3 });
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
+            pdf.save(`CV_${curLang}.pdf`);
+            t.style.display = 'none';
+        }, 500);
     }
 </script>
 </body>
