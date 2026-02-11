@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cv Forge | Professional Polish</title>
+    <title>Cv Forge | Auto-Fill Edition</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -66,19 +66,25 @@
         #status-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; color: white; flex-direction: column; backdrop-filter: blur(5px); }
         .loader-box { background: var(--input-bg); color: var(--text-main); padding: 25px; border-radius: 20px; text-align: center; border: 2px solid var(--accent); width: 280px; }
 
-        /* --- PDF Template Fixes --- */
+        /* --- PDF Template: SMART FLEX SYSTEM --- */
         #pdf-render-zone { position: absolute; top: -20000px; left: -20000px; }
-        .pdf-page { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; color: #0f172a; font-family: 'Cairo', sans-serif; }
-        .pdf-header { background: var(--primary); padding: 35px 45px; color: white; display: flex; justify-content: space-between; align-items: center; height: 210px; }
-        .pdf-body { display: grid; grid-template-columns: 1.55fr 1fr; flex: 1; }
-        .pdf-main { padding: 25px 40px; }
-        .pdf-side { background: #f8fafc; padding: 25px 30px; border-right: 1px solid #e2e8f0; }
+        .pdf-page { width: 210mm; height: 297mm; background: white; display: flex; flex-direction: column; color: #0f172a; font-family: 'Cairo', sans-serif; overflow: hidden; }
         
-        .pdf-section-title { color: var(--primary); font-size: 15px; font-weight: 900; margin-top: 15px; margin-bottom: 4px; }
-        .pdf-divider { height: 2px; background: var(--accent); margin-bottom: 12px; width: 100%; border-radius: 2px; }
-        .pdf-badge { background: var(--primary); color: white; padding: 5px 10px; border-radius: 5px; font-weight: 800; font-size: 11.5px; margin-bottom: 10px; text-align: center; }
+        .pdf-header { background: var(--primary); padding: 40px 50px; color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        
+        .pdf-body { display: grid; grid-template-columns: 1.55fr 1fr; flex-grow: 1; min-height: 0; }
+        
+        /* تمدد المحتوى ليملأ المساحة */
+        .pdf-main { padding: 30px 40px; display: flex; flex-direction: column; justify-content: space-around; flex-grow: 1; }
+        .pdf-side { background: #f8fafc; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .pdf-section-title { color: var(--primary); font-size: 18px; font-weight: 900; margin-bottom: 5px; }
+        .pdf-divider { height: 3px; background: var(--accent); margin-bottom: 15px; width: 100%; border-radius: 2px; }
+        .pdf-badge { background: var(--primary); color: white; padding: 8px; border-radius: 6px; font-weight: 800; font-size: 13px; margin-bottom: 15px; text-align: center; }
 
-        .content-text { white-space: pre-line; line-height: 1.4; font-size: 12px; margin-bottom: 15px; color: #334155; }
+        .content-text { white-space: pre-line; line-height: 1.6; font-size: 14px; color: #1e293b; }
+        .side-item { margin-bottom: 15px; font-size: 12px; }
+
         .pdf-page.ltr { direction: ltr; }
         .pdf-page.ltr .pdf-side { border-right: none; border-left: 1px solid #e2e8f0; }
     </style>
@@ -86,7 +92,7 @@
 <body id="body-tag">
 
     <header>
-        <div style="font-family:'Almarai'; font-weight:900; font-size:20px;">CV <span id="forge-logo" style="color:var(--accent)">FORGE</span></div>
+        <div style="font-family:'Almarai'; font-weight:900; font-size:20px;">CV <span style="color:var(--accent)">FORGE</span></div>
         <div class="header-actions">
             <div class="palette-wrapper">
                 <span class="palette-hint" id="p-hint">غير الألوان!</span>
@@ -118,7 +124,7 @@
                 <div class="input-group"><label>الإيميل</label><input type="email" id="inEmail" oninput="save()"></div>
             </div>
 
-            <div class="section-label">المسيرة الذاتية</div>
+            <div class="section-label">المسيرة والخبرات</div>
             <div class="input-group"><label>الصورة الشخصية</label><input type="file" id="inPhoto" accept="image/*"></div>
             <div class="input-group"><label>النبذة التعريفية</label><textarea id="inAbout" oninput="save()" rows="2"></textarea></div>
             <div class="input-group"><label>الخبرات العملية</label><textarea id="inExp" oninput="save()" rows="4"></textarea></div>
@@ -138,7 +144,7 @@
     <div id="status-overlay">
         <div class="loader-box">
             <i class="fas fa-circle-notch fa-spin" style="font-size:30px; color:var(--accent); margin-bottom:15px;"></i>
-            <div id="status-text" style="font-weight:bold;">جاري معالجة البيانات...</div>
+            <div id="status-text" style="font-weight:bold;">جاري تحسين مظهر الـ PDF...</div>
         </div>
     </div>
 
@@ -146,40 +152,52 @@
         <div id="pdf-template" class="pdf-page">
             <div id="pdf-header" class="pdf-header">
                 <div>
-                    <h1 id="outName" style="font-size:38px; margin:0; line-height:1.1;"></h1>
-                    <p id="outJob" style="font-size:18px; opacity:0.9; margin:4px 0 0;"></p>
+                    <h1 id="outName" style="font-size:42px; margin:0;"></h1>
+                    <p id="outJob" style="font-size:22px; opacity:0.9; margin:5px 0 0;"></p>
                 </div>
-                <div style="width:130px; height:130px; border-radius:12px; border:3px solid white; overflow:hidden; background:#eee;">
+                <div style="width:140px; height:140px; border-radius:15px; border:4px solid white; overflow:hidden; background:#eee;">
                     <img id="outPhoto" style="width:100%; height:100%; object-fit:cover;">
                 </div>
             </div>
             <div class="pdf-body">
                 <div class="pdf-main">
-                    <div id="pdf-label-exp" class="pdf-section-title">الخبرات المهنية</div>
-                    <div class="pdf-divider" id="d1"></div>
-                    <div id="outExp" class="content-text"></div>
+                    <section>
+                        <div id="pdf-label-exp" class="pdf-section-title">الخبرات المهنية</div>
+                        <div class="pdf-divider" id="d1"></div>
+                        <div id="outExp" class="content-text"></div>
+                    </section>
                     
-                    <div id="pdf-label-edu" class="pdf-section-title">التعليم</div>
-                    <div class="pdf-divider" id="d2"></div>
-                    <div id="outEdu" class="content-text"></div>
+                    <section>
+                        <div id="pdf-label-edu" class="pdf-section-title">التعليم</div>
+                        <div class="pdf-divider" id="d2"></div>
+                        <div id="outEdu" class="content-text"></div>
+                    </section>
 
-                    <div id="pdf-label-skills" class="pdf-section-title">المهارات والقدرات</div>
-                    <div class="pdf-divider" id="d3"></div>
-                    <div id="outSkills" class="content-text" style="margin-bottom:0;"></div>
+                    <section>
+                        <div id="pdf-label-skills" class="pdf-section-title">المهارات والقدرات</div>
+                        <div class="pdf-divider" id="d3"></div>
+                        <div id="outSkills" class="content-text"></div>
+                    </section>
                 </div>
                 
                 <div class="pdf-side" id="pdf-sidebar">
-                    <div id="pdf-label-about" class="pdf-badge">الملف الشخصي</div>
-                    <div id="outAbout" style="font-size:10.5px; line-height:1.4; margin-bottom:20px; color:#475569;"></div>
+                    <div>
+                        <div id="pdf-label-about" class="pdf-badge">الملف الشخصي</div>
+                        <div id="outAbout" style="font-size:12px; line-height:1.6; margin-bottom:30px;"></div>
+                    </div>
                     
-                    <div id="pdf-label-contact" class="pdf-badge">بيانات التواصل</div>
-                    <div style="font-size:10px; margin-bottom:6px;">📅 <span id="outBirth"></span></div>
-                    <div style="font-size:10px; margin-bottom:6px;">📍 <span id="outAddress"></span></div>
-                    <div style="font-size:10px; margin-bottom:6px;">📞 <span id="outPhone"></span></div>
-                    <div style="font-size:10px; margin-bottom:20px;">✉️ <span id="outEmail"></span></div>
+                    <div>
+                        <div id="pdf-label-contact" class="pdf-badge">بيانات التواصل</div>
+                        <div class="side-item">📅 <span id="outBirth"></span></div>
+                        <div class="side-item">📍 <span id="outAddress"></span></div>
+                        <div class="side-item">📞 <span id="outPhone"></span></div>
+                        <div class="side-item">✉️ <span id="outEmail"></span></div>
+                    </div>
 
-                    <div id="pdf-label-lang" class="pdf-badge">اللغات</div>
-                    <div id="outLang" style="font-size:11px; text-align:center; font-weight:bold; color:var(--primary);"></div>
+                    <div>
+                        <div id="pdf-label-lang" class="pdf-badge">اللغات</div>
+                        <div id="outLang" style="font-size:14px; text-align:center; font-weight:bold; color:var(--primary);"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,7 +248,7 @@
             document.getElementById('pdf-template').classList.toggle('ltr', lang === 'en');
             
             const labels = {
-                en: { exp:"Work Experience", edu:"Education", skills:"Skills", about:"Profile", contact:"Contact Info", lang:"Languages" },
+                en: { exp:"Professional Experience", edu:"Education", skills:"Skills & Abilities", about:"Profile Summary", contact:"Contact Details", lang:"Languages" },
                 ar: { exp:"الخبرات المهنية", edu:"التعليم", skills:"المهارات والقدرات", about:"الملف الشخصي", contact:"بيانات التواصل", lang:"اللغات" }
             };
             document.getElementById('pdf-label-exp').innerText = labels[lang].exp;
@@ -258,15 +276,26 @@
                 if(document.getElementById(outId)) document.getElementById(outId).innerText = document.getElementById(f).value;
             });
 
+            // تعديل ذكي للخط بناءً على حجم المحتوى
+            const expText = document.getElementById('inExp').value;
+            const contentDivs = document.querySelectorAll('.content-text');
+            if(expText.length < 150) {
+                contentDivs.forEach(d => d.style.fontSize = "16px");
+            } else if(expText.length > 500) {
+                contentDivs.forEach(d => d.style.fontSize = "11px");
+            } else {
+                contentDivs.forEach(d => d.style.fontSize = "14px");
+            }
+
             const over = document.getElementById('status-overlay');
             over.style.display = 'flex';
-            document.getElementById('status-text').innerText = "جاري إنشاء ملف الـ PDF بألوانك المخصصة...";
+            document.getElementById('status-text').innerText = "جاري توزيع المحتوى على الصفحة...";
 
             setTimeout(async () => {
                 const canvas = await html2canvas(document.getElementById('pdf-template'), { scale: 2 });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-                pdf.save(`CV_Professional.pdf`);
+                pdf.save(`CV_Smart_Layout.pdf`);
                 over.style.display = 'none';
             }, 1200);
         }
