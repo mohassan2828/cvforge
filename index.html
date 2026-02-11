@@ -30,7 +30,6 @@
         * { box-sizing: border-box; transition: 0.3s; }
         body { margin: 0; padding: 0; background: var(--bg-grad); font-family: 'Cairo', sans-serif; color: var(--text-main); }
 
-        /* --- UI Header --- */
         header { 
             width: 100%; padding: 15px 25px; background: var(--input-bg);
             box-shadow: 0 2px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
@@ -44,7 +43,6 @@
         .lang-btn { padding: 5px 8px; border: none; border-radius: 7px; cursor: pointer; font-size: 10px; font-weight: 800; background: transparent; }
         .lang-btn.active { background: var(--accent); color: white; }
 
-        /* --- Interface Elements --- */
         .welcome-hero { text-align: center; padding: 40px 20px; }
         .welcome-hero h1 { font-size: 28px; font-weight: 900; margin: 0; color: var(--primary); }
         .welcome-hero p { color: var(--text-muted); font-size: 15px; margin-top: 10px; }
@@ -63,9 +61,9 @@
         
         .download-btn { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 15px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 20px rgba(26, 35, 126, 0.2); }
 
-        #toast { position: fixed; bottom: 30px; right: 30px; padding: 15px 25px; background: var(--primary); color: white; border-radius: 12px; display: none; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); align-items: center; gap: 10px; }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); padding: 15px 25px; background: var(--primary); color: white; border-radius: 12px; display: none; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); align-items: center; gap: 10px; font-weight: bold; }
 
-        /* --- GLOBAL PDF DESIGN --- */
+        /* --- PDF DESIGN --- */
         #pdf-render-zone { position: absolute; top: -20000px; left: -20000px; }
         .pdf-page { width: 210mm; height: 297mm; background: white; display: grid; grid-template-columns: 75mm 135mm; color: #333; overflow: hidden; position: relative; }
         .pdf-sidebar { background: #2c3e50; color: #ffffff; padding: 40px 25px; display: flex; flex-direction: column; align-items: center; height: 100%; }
@@ -188,27 +186,47 @@
         let currentLang = 'ar';
 
         const translations = {
-            ar: { welcome: "أهلاً بك في CV FORGE ✨", sub: "صمم سيرتك الذاتية العالمية بخمس لغات وبتصميم PDF احترافي.", personal: "المعلومات الشخصية", career: "المسيرة والخبرات", name: "الاسم الكامل", job: "المسمى الوظيفي", birth: "تاريخ الميلاد", address: "العنوان", phone: "رقم الهاتف", email: "البريد الإلكتروني", photo: "الصورة الشخصية", about: "النبذة التعريفية", exp: "الخبرات العملية", edu: "التعليم", skills: "المهارات", lang: "اللغات", download: "تحميل السيرة الذاتية (PDF)", toast_start: "جاري تحضير ملفك العالمي...", toast_end: "تم تحميل الملف بنجاح!" },
-            en: { welcome: "Welcome to CV FORGE ✨", sub: "Design your global CV in 5 languages with pro PDF design.", personal: "Personal Info", career: "Career & Experience", name: "Full Name", job: "Job Title", birth: "Birth Date", address: "Address", phone: "Phone", email: "Email", photo: "Photo", about: "About Me", exp: "Experience", edu: "Education", skills: "Skills", lang: "Languages", download: "Download CV (PDF)", toast_start: "Preparing your global file...", toast_end: "Downloaded successfully!" }
-            // تتبع باقي اللغات (فرنساوي، إيطالي، ألماني) نفس النمط
+            ar: { welcome: "أهلاً بك في CV FORGE ✨", sub: "صمم سيرتك الذاتية العالمية بخمس لغات وبتصميم PDF احترافي.", personal: "المعلومات الشخصية", career: "المسيرة والخبرات", name: "الاسم الكامل", job: "المسمى الوظيفي", birth: "تاريخ الميلاد", address: "العنوان", phone: "رقم الهاتف", email: "البريد الإلكتروني", photo: "الصورة الشخصية", about: "النبذة التعريفية", exp: "الخبرات العملية", edu: "التعليم", skills: "المهارات", lang: "اللغات", download: "تحميل السيرة الذاتية (PDF)", contact: "اتصال", toast_start: "جاري تحضير ملفك...", toast_end: "تم التحميل بنجاح!" },
+            en: { welcome: "Welcome to CV FORGE ✨", sub: "Design your global CV in 5 languages with pro PDF design.", personal: "Personal Info", career: "Career & Experience", name: "Full Name", job: "Job Title", birth: "Birth Date", address: "Address", phone: "Phone", email: "Email", photo: "Profile Photo", about: "About Me", exp: "Work Experience", edu: "Education", skills: "Skills", lang: "Languages", download: "Download PDF", contact: "Contact", toast_start: "Preparing PDF...", toast_end: "Success!" },
+            fr: { welcome: "Bienvenue sur CV FORGE ✨", sub: "Créez votre CV mondial en 5 langues avec un design PDF pro.", personal: "Infos Personnelles", career: "Expérience", name: "Nom Complet", job: "Poste", birth: "Date de Naissance", address: "Adresse", phone: "Téléphone", email: "Email", photo: "Photo", about: "À Propos", exp: "Expérience", edu: "Éducation", skills: "Compétences", lang: "Langues", download: "Télécharger PDF", contact: "Contact", toast_start: "Préparation...", toast_end: "Succès!" },
+            it: { welcome: "Benvenuti su CV FORGE ✨", sub: "Crea il tuo CV globale in 5 lingue con un design PDF pro.", personal: "Info Personali", career: "Esperienza", name: "Nome Completo", job: "Posizione", birth: "Data di Nascita", address: "Indirizzo", phone: "Telefono", email: "Email", photo: "Foto", about: "Su di Me", exp: "Esperienza", edu: "Istruzione", skills: "Abilità", lang: "Lingue", download: "Scarica PDF", contact: "Contatto", toast_start: "Preparazione...", toast_end: "Successo!" },
+            de: { welcome: "Willkommen bei CV FORGE ✨", sub: "Erstellen Sie Ihren Lebenslauf in 5 Sprachen mit Profi-PDF.", personal: "Persönliche Infos", career: "Erfahrung", name: "Name", job: "Beruf", birth: "Geburtsdatum", address: "Adresse", phone: "Telefon", email: "Email", photo: "Foto", about: "Über mich", exp: "Berufserfahrung", edu: "Bildung", skills: "Fähigkeiten", lang: "Sprachen", download: "PDF Herunterladen", contact: "Kontakt", toast_start: "Wird vorbereitet...", toast_end: "Erfolg!" }
         };
 
-        async function changeLang(lang, btn) {
+        function changeLang(lang, btn) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
             const isAr = lang === 'ar';
             document.getElementById('pdf-template').className = isAr ? 'pdf-page' : 'pdf-page ltr';
-            const t = translations[lang] || translations['en'];
+            const t = translations[lang];
             
             document.getElementById('txt-welcome').innerText = t.welcome;
+            document.getElementById('txt-subwelcome').innerText = t.sub;
+            document.getElementById('txt-personal').innerText = t.personal;
+            document.getElementById('txt-career').innerText = t.career;
+            document.getElementById('lbl-name').innerText = t.name;
+            document.getElementById('lbl-job').innerText = t.job;
+            document.getElementById('lbl-birth').innerText = t.birth;
+            document.getElementById('lbl-address').innerText = t.address;
+            document.getElementById('lbl-phone').innerText = t.phone;
+            document.getElementById('lbl-email').innerText = t.email;
+            document.getElementById('lbl-photo').innerText = t.photo;
+            document.getElementById('lbl-about').innerText = t.about;
+            document.getElementById('lbl-exp').innerText = t.exp;
+            document.getElementById('lbl-edu').innerText = t.edu;
+            document.getElementById('lbl-skills').innerText = t.skills;
+            document.getElementById('lbl-lang').innerText = t.lang;
             document.getElementById('txt-download').innerText = t.download;
-            // تحديث عناوين الـ PDF
-            document.getElementById('pdf-lbl-contact').innerText = isAr ? 'اتصال' : 'Contact';
-            document.getElementById('pdf-lbl-exp').innerText = isAr ? 'الخبرة المهنية' : 'Work Experience';
-            document.getElementById('pdf-lbl-edu').innerText = isAr ? 'التعليم' : 'Education';
-            document.getElementById('pdf-lbl-about').innerText = isAr ? 'الملف الشخصي' : 'Profile';
+
+            // PDF Titles
+            document.getElementById('pdf-lbl-contact').innerText = t.contact;
+            document.getElementById('pdf-lbl-exp').innerText = t.exp;
+            document.getElementById('pdf-lbl-edu').innerText = t.edu;
+            document.getElementById('pdf-lbl-about').innerText = t.about;
+            document.getElementById('pdf-lbl-skills-side').innerText = t.skills;
+            document.getElementById('pdf-lbl-lang-side').innerText = t.lang;
         }
 
         function showToast(text) {
@@ -219,7 +237,7 @@
         }
 
         async function exportCV() {
-            showToast(translations[currentLang]?.toast_start || "Processing...");
+            showToast(translations[currentLang].toast_start);
             fields.forEach(f => {
                 const outId = f.replace('in', 'out');
                 if(document.getElementById(outId)) document.getElementById(outId).innerText = document.getElementById(f).value;
@@ -229,8 +247,8 @@
                 const canvas = await html2canvas(document.getElementById('pdf-template'), { scale: 3, useCORS: true });
                 const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-                pdf.save(`Global_CV_${currentLang}.pdf`);
-                showToast(translations[currentLang]?.toast_end || "Done!");
+                pdf.save(`Professional_CV_${currentLang}.pdf`);
+                showToast(translations[currentLang].toast_end);
             }, 1000);
         }
 
