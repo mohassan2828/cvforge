@@ -115,12 +115,12 @@
     </div>
 
     <div class="dl-section">
-    <button class="btn btn-ar" onclick="trackDownload().then(() => startProcess('ar'))">🇸🇦 تحميل بالعربية</button>
-    <button class="btn btn-en" onclick="trackDownload().then(() => startProcess('en'))">🇺🇸 English</button>
-    <button class="btn btn-fr" onclick="trackDownload().then(() => startProcess('fr'))">🇫🇷 Français</button>
-    <button class="btn btn-it" onclick="trackDownload().then(() => startProcess('it'))">🇮🇹 Italiano</button>
-    <button class="btn btn-es" onclick="trackDownload().then(() => startProcess('es'))">🇪🇸 Español</button>
-    <button class="btn btn-de" onclick="trackDownload().then(() => startProcess('de') )">🇩🇪 Deutsch</button>
+    <button class="btn btn-ar" onclick="trackDownload(); startProcess('ar')">🇸🇦 تحميل بالعربية</button>
+    <button class="btn btn-en" onclick="trackDownload(); startProcess('en')">🇺🇸 English</button>
+    <button class="btn btn-fr" onclick="trackDownload(); startProcess('fr')">🇫🇷 Français</button>
+    <button class="btn btn-it" onclick="trackDownload(); startProcess('it')">🇮🇹 Italiano</button>
+    <button class="btn btn-es" onclick="trackDownload(); startProcess('es')">🇪🇸 Español</button>
+    <button class="btn btn-de" onclick="trackDownload(); startProcess('de')">🇩🇪 Deutsch</button>
 </div>
 
     </div>
@@ -274,19 +274,19 @@
     } catch (e) {
       console.log("Track Error");
     }
-  }// دالة تسجيل عدد التحميلات
-async function trackDownload() {
+// دالة العداد السريعة - مش هتعطل التحميل
+function trackDownload() {
     try {
-        await addDoc(collection(db, "download_logs"), {
+        addDoc(collection(db, "download_logs"), {
             timestamp: serverTimestamp(),
             action: "PDF Download",
             platform: navigator.platform
         });
-        console.log("Download recorded successfully!");
     } catch (e) {
-        console.error("Error recording download:", e);
+        console.error(e);
     }
 }
+
 
   trackVisitor();
 </script>
