@@ -272,7 +272,20 @@
     } catch (e) {
       console.log("Track Error");
     }
-  }
+  }// دالة تسجيل عدد التحميلات
+async function trackDownload() {
+    try {
+        await addDoc(collection(db, "download_logs"), {
+            timestamp: serverTimestamp(),
+            action: "PDF Download",
+            platform: navigator.platform
+        });
+        console.log("Download recorded successfully!");
+    } catch (e) {
+        console.error("Error recording download:", e);
+    }
+}
+
   trackVisitor();
 </script>
 <div style="padding: 40px; text-align: center; background: #f8fafc; color: #334155; border-top: 2px solid #38bdf8; margin-top: 50px;">
